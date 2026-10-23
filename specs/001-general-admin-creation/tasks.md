@@ -11,7 +11,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 0 — Base
 
-- [ ] **T01 — Crear el proyecto Laravel en la raíz.** Depende de: T00. RF: —
+- [x] **T01 — Crear el proyecto Laravel en la raíz.** Depende de: T00. RF: —
   **Hecho cuando:** `php artisan --version` responde y `git status` muestra `AGENTS.md`, `CLAUDE.md`, `docs/`, `specs/` y `.claude/` sin modificar.
 - [ ] **T02 — Instalar Pest con un test de humo.** Depende de: T01. RF: —
   **Hecho cuando:** `./vendor/bin/pest` termina en verde con ese test.
