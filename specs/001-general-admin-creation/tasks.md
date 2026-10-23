@@ -26,7 +26,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 1 — Datos iniciales
 
-- [ ] **T06b — Configurar MySQL para desarrollo y pruebas.** Conexión `mysql` solo por `.env`, base de datos de pruebas aparte, y retirar el SQLite heredado de T01. Depende de: T02. RF: RF-26
+- [x] **T06b — Configurar MySQL para desarrollo y pruebas.** Conexión `mysql` solo por `.env`, base de datos de pruebas aparte, y retirar el SQLite heredado de T01. Depende de: T02. RF: RF-26
   **Hecho cuando:** un test comprueba que la conexión por defecto es `mysql` y que la de pruebas usa una base de datos distinta de la de desarrollo, `php artisan migrate:status` conecta, `.env.example` trae las variables `DB_*` sin credenciales reales y no queda `database/database.sqlite`.
 - [ ] **T07 — Añadir `users.is_admin` y el estado `admin` de la factory.** Depende de: T06b. RF: RF-03 (base)
   **Hecho cuando:** un test comprueba que `is_admin` es falso por defecto y que la factory crea administradores.
