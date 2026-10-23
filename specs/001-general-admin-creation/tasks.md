@@ -6,8 +6,8 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Antes de empezar
 
-- [x] **T00 — Aprobar los tres puntos del plan.** Esquema, dependencias (`league/flysystem-aws-s3-v3`, `laravel-lang/lang`) e interpretación de la regla 6.
-  **Hecho cuando:** el usuario confirma los tres puntos por escrito.
+- [x] **T00 — Aprobar los tres puntos del plan.** Esquema, dependencias (`league/flysystem-aws-s3-v3`, `laravel-lang/lang`, `spatie/laravel-permission`) e interpretación de la regla 6.
+  **Hecho cuando:** el usuario confirma los tres puntos por escrito. (`spatie/laravel-permission` y el esquema de roles que trae se aprobaron después, en chat, sustituyendo a `users.is_admin`.)
 
 ## Fase 0 — Base
 
@@ -28,20 +28,20 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 - [x] **T06b — Configurar MySQL para desarrollo y pruebas.** Conexión `mysql` solo por `.env`, base de datos de pruebas aparte, y retirar el SQLite heredado de T01. Depende de: T02. RF: RF-26
   **Hecho cuando:** un test comprueba que la conexión por defecto es `mysql` y que la de pruebas usa una base de datos distinta de la de desarrollo, `php artisan migrate:status` conecta, `.env.example` trae las variables `DB_*` sin credenciales reales y no queda `database/database.sqlite`.
-- [x] **T07 — Añadir `users.is_admin` y el estado `admin` de la factory.** Depende de: T06b. RF: RF-03 (base)
-  **Hecho cuando:** un test comprueba que `is_admin` es falso por defecto y que la factory crea administradores.
-- [x] **T08 — Crear `AdminUserSeeder` idempotente.** Depende de: T07. RF: RF-25
-  **Hecho cuando:** tests comprueban que crea `admin@etecnia.es` con `is_admin` y contraseña `password` válida, y que ejecutarlo dos veces no lo duplica ni cambia su contraseña.
+- [ ] **T07r — Instalar `spatie/laravel-permission` y revertir `users.is_admin`.** Publicar sus migraciones y config; migración que quita la columna `is_admin` (ya no se usa); `User` pasa a usar el trait `HasRoles`; crear `RoleSeeder` con los roles `admin` y `user`; el estado `admin()` de la factory pasa a usar `assignRole('admin')`. Depende de: T06b. RF: RF-03 (base)
+  **Hecho cuando:** un test comprueba que un usuario nuevo no tiene el rol `admin`, que la factory lo asigna con `assignRole('admin')`, y que `RoleSeeder` crea los roles `admin` y `user` sin duplicarlos si se ejecuta dos veces.
+- [ ] **T08r — Reescribir `AdminUserSeeder` para asignar el rol en vez de `is_admin`.** Depende de: T07r. RF: RF-25
+  **Hecho cuando:** tests comprueban que crea `admin@etecnia.es` con el rol `admin` asignado y contraseña `password` válida, y que ejecutarlo dos veces no lo duplica, no le cambia la contraseña ni le asigna el rol dos veces.
 - [x] **T09 — Crear modelo, migración y factory de `categories`.** Depende de: T06b. RF: RF-06, RF-07 (base)
   **Hecho cuando:** un test comprueba que el nombre es único.
-- [x] **T10 — Crear `CategorySeeder` y `DatabaseSeeder`.** Depende de: T08, T09. RF: RF-06
-  **Hecho cuando:** tests comprueban que existen las categorías iniciales y que ejecutarlo dos veces no duplica; `php artisan migrate:fresh --seed` termina sin errores.
+- [ ] **T10r — Añadir `RoleSeeder` a `DatabaseSeeder`, antes de `AdminUserSeeder`.** El resto de `CategorySeeder` y `DatabaseSeeder` no cambia. Depende de: T07r, T08r, T09. RF: RF-06
+  **Hecho cuando:** tests comprueban que existen las categorías iniciales y que ejecutarlo dos veces no duplica; `php artisan migrate:fresh --seed` termina sin errores, con los roles creados antes de asignar el de administrador.
 
 ## Fase 2 — Acceso y roles
 
-- [ ] **T11 — Exigir login y bloquear el registro público.** Depende de: T03, T08. RF: RF-01, RF-02
+- [ ] **T11 — Exigir login y bloquear el registro público.** Depende de: T03, T08r. RF: RF-01, RF-02
   **Hecho cuando:** tests comprueban que un visitante es redirigido al login y que no existe ruta de registro.
-- [ ] **T12 — Restringir `UserResource` a administradores.** `UserPolicy` y recurso con listado. Depende de: T11. RF: RF-03
+- [ ] **T12 — Restringir `UserResource` a administradores.** `UserPolicy` apoyada en `hasRole('admin')` y recurso con listado. Depende de: T11. RF: RF-03
   **Hecho cuando:** tests comprueban que el administrador ve el listado y que un usuario normal no lo ve ni accede por URL.
 - [ ] **T13 — Crear usuarios con rol desde el panel.** Depende de: T12. RF: RF-03
   **Hecho cuando:** un test crea un usuario administrador y otro normal, con contraseña cifrada, y ambos pueden iniciar sesión.
@@ -109,10 +109,10 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | RF | Tareas |
 |----|--------|
 | RF-01, RF-02 | T11 |
-| RF-03 | T07, T12, T13 |
+| RF-03 | T07r, T12, T13 |
 | RF-04 | T16, T18 |
 | RF-05 | T18, T34 |
-| RF-06 | T09, T10 |
+| RF-06 | T09, T10r |
 | RF-07, RF-08 | T14, T15 |
 | RF-09 | T16, T17 |
 | RF-10 | T19 |
@@ -129,5 +129,5 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | RF-22 | T31 |
 | RF-23 | T33 |
 | RF-24 | T34 |
-| RF-25 | T08 |
+| RF-25 | T08r |
 | RF-26 | T06b |

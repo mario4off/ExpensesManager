@@ -12,6 +12,7 @@ Registrar gastos personales por categorías y conservar sus tickets y facturas e
 - Moneda única: EUR.
 - Documentos en S3 privado; descarga a través de la aplicación con las credenciales del `.env`, solo para el dueño.
 - Base de datos MySQL.
+- Roles y permisos gestionados con el paquete Spatie Laravel-permission.
 
 ## Requisitos funcionales (EARS)
 

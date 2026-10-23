@@ -6,8 +6,8 @@ Implementa `spec.md` (RF-01 a RF-26). Respeta `docs/constitution.md`.
 
 Este plan propone esquema y dependencias; no se ejecuta nada hasta que se aprueben.
 
-1. **Esquema:** columna `users.is_admin` y tablas `categories`, `expenses` y `expense_documents` (ver Modelo de datos).
-2. **Dependencias nuevas (dos):** el driver S3 de Flysystem (`league/flysystem-aws-s3-v3`), necesario para el disco `s3`, y el paquete de traducciones `laravel-lang/lang`, que aporta los mensajes de validación de Laravel en español (aprobado por el usuario). No se propone ninguna otra: ni paquete de roles ni nada más.
+1. **Esquema:** tablas de `spatie/laravel-permission` (`roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`) con dos roles fijos, `admin` y `user`, y tablas `categories`, `expenses` y `expense_documents` (ver Modelo de datos). Sustituye a la columna `users.is_admin`, que ya está implementada y probada (T07, T08) y habrá que revertir.
+2. **Dependencias nuevas (tres):** el driver S3 de Flysystem (`league/flysystem-aws-s3-v3`), necesario para el disco `s3`; el paquete de traducciones `laravel-lang/lang`, que aporta los mensajes de validación de Laravel en español; y `spatie/laravel-permission`, para los roles `admin` y `user` (las tres aprobadas por el usuario).
 3. **Interpretación de la regla 6 (disco local):** Livewire guarda cada subida en un directorio temporal local hasta que se pulsa Guardar, y PHP ya recibe el archivo en su directorio temporal. Se interpreta que "ningún documento en disco local" significa **ningún almacenamiento persistente local**. Alternativa descartada: apuntar la subida temporal de Livewire a S3, lo que deja basura en el bucket que habría que limpiar con reglas de ciclo de vida. Confirmar esta lectura.
 
 ## Módulos
@@ -15,17 +15,18 @@ Este plan propone esquema y dependencias; no se ejecuta nada hasta que se aprueb
 | # | Módulo | Contenido | RF |
 |---|--------|-----------|----|
 | 0 | Base | Proyecto Laravel con Filament y Pest, panel único, locale `es`, zona horaria `Europe/Madrid`, disco `s3` configurado solo por `.env`, conexión MySQL por `.env` para desarrollo y una base de datos aparte para las pruebas, config de subida (límites de PHP y de Livewire ≥ 10 MB) | RF-13, RF-19, RF-26 (cimientos) |
-| 1 | Acceso y roles | Panel con login y sin registro; `UserResource` visible solo para administradores; `UserPolicy` | RF-01, RF-02, RF-03 |
+| 1 | Acceso y roles | Panel con login y sin registro; roles `admin` y `user` con `spatie/laravel-permission`; `UserResource` visible solo para `admin`; `UserPolicy` apoyada en `hasRole()` | RF-01, RF-02, RF-03 |
 | 2 | Categorías | `CategoryResource`; `CategoryPolicy`: ver para todos, crear, editar y borrar solo administrador; bloqueo de borrado con gastos | RF-07, RF-08, RF-09 |
 | 3 | Gastos | `ExpenseResource` con formulario, tabla, filtros y orden; consulta acotada al usuario; `ExpensePolicy` | RF-04, RF-05, RF-10 a RF-15 |
 | 4 | Documentos | Repeater de documentos dentro del formulario del gasto, sin mínimo de elementos; servicio de almacenamiento S3; descarga desde la vista del gasto; `ExpenseDocumentPolicy` | RF-16 a RF-24, y RF-05 para documentos |
-| 5 | Datos iniciales | `AdminUserSeeder` y `CategorySeeder`, ambos idempotentes, llamados desde `DatabaseSeeder` | RF-06, RF-25 |
+| 5 | Datos iniciales | `RoleSeeder` (roles `admin` y `user`), `AdminUserSeeder` (asigna el rol `admin`) y `CategorySeeder`, todos idempotentes, llamados desde `DatabaseSeeder` | RF-06, RF-25 |
 
 Orden de implementación: 0, 5 (el administrador hace falta para entrar), 1, 2, 3, 4. Cada paso empieza por sus tests Pest en rojo (regla 8).
 
 ## Modelo de datos
 
-- **users** (tabla existente de Laravel): se añade `is_admin` booleano, falso por defecto. RF-03.
+- **users** (tabla existente de Laravel): usa el trait `HasRoles` de Spatie; el rol se guarda en las tablas del paquete, no en una columna propia. RF-03.
+- Tablas de `spatie/laravel-permission`: `roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`, con los roles `admin` y `user` precargados por `RoleSeeder`. RF-03.
 - **categories**: `id`, `name` (único), marcas de tiempo. Global, sin `user_id`. RF-06, RF-07.
 - **expenses**: `id`, `user_id` (FK a users, borrado en cascada), `category_id` (FK a categories, **restrict**), `spent_on` (fecha), `amount` (decimal 10,2), `description` (texto, nulo), marcas de tiempo. Índice compuesto `(user_id, spent_on)` para el listado. No hay columna de moneda: es siempre EUR. RF-10 a RF-15.
 - **expense_documents**: `id`, `expense_id` (FK a expenses, cascada solo como red de seguridad), `type` (ticket o factura), `path` (clave en S3), `original_name`, `mime_type`, `size`, marcas de tiempo. RF-16 a RF-24.
@@ -38,7 +39,7 @@ Claves de S3: con prefijo por usuario y nombre aleatorio, para que no colisionen
 
 | Decisión | Por qué | Alternativa descartada |
 |----------|---------|------------------------|
-| Rol con `users.is_admin` | Solo hay dos roles fijos; no justifica una dependencia (regla 12) | Paquete de roles y permisos o Filament Shield: más superficie, dependencia y migraciones para un caso binario |
+| Roles con `spatie/laravel-permission` | Decisión explícita del usuario; deja preparado el terreno para permisos más finos si el proyecto crece más allá de dos roles fijos | La columna `users.is_admin`: más simple para un caso binario (regla 12) y ya implementada (T07, T08), pero el usuario pidió sustituirla por el paquete |
 | `category_id` con restrict más comprobación previa en Filament | La base de datos garantiza la integridad aunque falle la interfaz; la comprobación da el mensaje en español (RF-09) | `nullOnDelete` (gastos huérfanos) o cascada (pérdida de datos de otros usuarios) |
 | Los tests usan una base de datos MySQL de pruebas, separada de la de desarrollo (RF-26) | Las garantías que importan, como restrict en la categoría (RF-09), la unicidad y los decimales exactos (RF-11), dependen del motor y SQLite las trata distinto | SQLite en memoria: más rápido, pero un test en verde no probaría el comportamiento real en MySQL |
 | Importe como decimal(10,2) | Las sumas SQL de la fase 2 salen directas y 2 decimales es lo que pide RF-11 | Entero en céntimos: obliga a convertir en cada formulario y en cada consulta del asistente |
@@ -60,6 +61,7 @@ Claves de S3: con prefijo por usuario y nombre aleatorio, para que no colisionen
 - **MySQL de pruebas:** hace falta un servidor MySQL local y una base de datos de pruebas creada; los tests son algo más lentos que con SQLite. Si la base de pruebas no existe, la suite falla con un error de conexión, no de lógica. Una pasada de tests no debe tocar la base de datos de desarrollo.
 - **SQLite heredado:** el esqueleto de T01 dejó `.env` con SQLite y un fichero `database/database.sqlite` con migraciones ya ejecutadas; se sustituyen por MySQL en T06b.
 - **Idempotencia del seeder:** si el administrador ya existe, no se le cambia la contraseña. Las credenciales `admin@etecnia.es` / `password` son solo de desarrollo (RF-25).
+- **Rework de T07 y T08:** `users.is_admin`, su cast, su entrada en `Fillable`, el estado `admin()` de la factory y `AdminUserSeeder` ya están implementados y probados sobre la columna. Hay que revertirlos: instalar el paquete, migrar quitando `is_admin`, añadir `RoleSeeder` y reescribir `AdminUserSeeder` para asignar el rol `admin`. No se toca código hasta que se apruebe este plan.
 
 ## Estrategia de tests
 
