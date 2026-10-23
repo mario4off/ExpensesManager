@@ -43,7 +43,7 @@ Registrar gastos personales por categorías y conservar sus tickets y facturas e
 
 ### Documentos
 
-- **RF-16** El sistema permitirá adjuntar a un gasto cero o más documentos, cada uno marcado como ticket o factura.
+- **RF-16** El sistema permitirá guardar un gasto sin documentos asociados y adjuntarle, de forma opcional, uno o más documentos, cada uno marcado como ticket o factura. Un gasto seguirá siendo válido si se le quitan todos sus documentos.
 - **RF-17** El sistema solo aceptará documentos PDF, JPG o PNG de hasta 10 MB.
 - **RF-18** Si un documento no cumple formato o tamaño, el sistema lo rechazará con un mensaje en español y no guardará el gasto de forma parcial.
 - **RF-19** El sistema almacenará los documentos únicamente en S3, nunca en disco local.
