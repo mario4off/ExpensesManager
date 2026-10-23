@@ -26,11 +26,12 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 
 ## Estilo y convenciones
 - PHP y Laravel en sus versiones estables actuales; sigue PSR-12 vía Pint.
-- Nombres de código (clases, métodos, variables, tablas) en inglés.
-- Textos de interfaz y mensajes al usuario en español.
+- Referencias (clases, métodos, variables, tablas, claves) en inglés.
+- Mensajes al usuario (interfaz, validaciones, respuestas del asistente) en español.
 - Tests con Pest, no PHPUnit clásico.
 
 ## Reglas
+- Lee `docs/constitution.md` antes de tocar código.
 - Usa recursos, formularios y tablas de Filament para todo lo que no sea el asistente. No crees controladores ni vistas Blade a mano para el CRUD.
 - El asistente es un componente Livewire propio, no un widget de Filament.
 - Subidas de tickets y facturas: disco `s3`. No guardes documentos en local.
@@ -40,6 +41,7 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 - Pregunta antes de cambiar el esquema de la base de datos o la estructura de las fases.
 
 ## Al terminar cualquier tarea
+- Escribe primero el test Pest y verifica que falla; implementa hasta que pase.
 - Ejecuta `./vendor/bin/pest` y confirma que pasa.
 - Ejecuta `./vendor/bin/pint`.
-- Toda funcionalidad nueva lleva su test Pest. Mockea S3 y Bedrock en los tests: nunca llames a AWS real.
+- Mockea S3 y Bedrock en los tests: nunca llames a AWS real.
