@@ -21,7 +21,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** un test comprueba el locale, la zona horaria y que el mensaje de validación `required` sale en español.
 - [x] **T05 — Configurar el disco `s3` solo por `.env`.** Driver S3, privado, sin valores literales. Depende de: T03. RF: RF-19 (base)
   **Hecho cuando:** `.env.example` trae las claves `AWS_*` vacías, un test comprueba que el disco `s3` es privado y `git grep` no encuentra credenciales en código.
-- [ ] **T06 — Permitir subidas de 10 MB.** Límite de Livewire y límites de PHP. Depende de: T03. RF: RF-17 (base)
+- [x] **T06 — Permitir subidas de 10 MB.** Límite de Livewire y límites de PHP. Depende de: T03. RF: RF-17 (base)
   **Hecho cuando:** un test comprueba que la regla de subida temporal de Livewire admite 10 MB y `php -r` muestra `upload_max_filesize` y `post_max_size` de al menos 10M en el entorno de desarrollo.
 
 ## Fase 1 — Datos iniciales
