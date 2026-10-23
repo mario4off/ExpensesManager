@@ -32,7 +32,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** un test comprueba que `is_admin` es falso por defecto y que la factory crea administradores.
 - [x] **T08 — Crear `AdminUserSeeder` idempotente.** Depende de: T07. RF: RF-25
   **Hecho cuando:** tests comprueban que crea `admin@etecnia.es` con `is_admin` y contraseña `password` válida, y que ejecutarlo dos veces no lo duplica ni cambia su contraseña.
-- [ ] **T09 — Crear modelo, migración y factory de `categories`.** Depende de: T06b. RF: RF-06, RF-07 (base)
+- [x] **T09 — Crear modelo, migración y factory de `categories`.** Depende de: T06b. RF: RF-06, RF-07 (base)
   **Hecho cuando:** un test comprueba que el nombre es único.
 - [ ] **T10 — Crear `CategorySeeder` y `DatabaseSeeder`.** Depende de: T08, T09. RF: RF-06
   **Hecho cuando:** tests comprueban que existen las categorías iniciales y que ejecutarlo dos veces no duplica; `php artisan migrate:fresh --seed` termina sin errores.
