@@ -13,16 +13,19 @@ class AdminUserSeeder extends Seeder
      *
      * Creates the initial development administrator (RF-25). These credentials
      * are for local development only and must be changed outside local.
+     *
+     * Assumes the `admin` role already exists (see RoleSeeder, which must run first).
      */
     public function run(): void
     {
-        User::firstOrCreate(
+        $admin = User::firstOrCreate(
             ['email' => 'admin@etecnia.es'],
             [
                 'name' => 'Administrador',
                 'password' => Hash::make('password'),
-                'is_admin' => true,
             ],
         );
+
+        $admin->assignRole('admin');
     }
 }

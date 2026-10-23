@@ -28,14 +28,15 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 - [x] **T06b — Configurar MySQL para desarrollo y pruebas.** Conexión `mysql` solo por `.env`, base de datos de pruebas aparte, y retirar el SQLite heredado de T01. Depende de: T02. RF: RF-26
   **Hecho cuando:** un test comprueba que la conexión por defecto es `mysql` y que la de pruebas usa una base de datos distinta de la de desarrollo, `php artisan migrate:status` conecta, `.env.example` trae las variables `DB_*` sin credenciales reales y no queda `database/database.sqlite`.
-- [ ] **T07r — Instalar `spatie/laravel-permission` y revertir `users.is_admin`.** Publicar sus migraciones y config; migración que quita la columna `is_admin` (ya no se usa); `User` pasa a usar el trait `HasRoles`; crear `RoleSeeder` con los roles `admin` y `user`; el estado `admin()` de la factory pasa a usar `assignRole('admin')`. Depende de: T06b. RF: RF-03 (base)
+- [x] **T07r — Instalar `spatie/laravel-permission` y revertir `users.is_admin`.** Publicar sus migraciones y config; migración que quita la columna `is_admin` (ya no se usa); `User` pasa a usar el trait `HasRoles`; crear `RoleSeeder` con los roles `admin` y `user`; el estado `admin()` de la factory pasa a usar `assignRole('admin')`. Depende de: T06b. RF: RF-03 (base)
   **Hecho cuando:** un test comprueba que un usuario nuevo no tiene el rol `admin`, que la factory lo asigna con `assignRole('admin')`, y que `RoleSeeder` crea los roles `admin` y `user` sin duplicarlos si se ejecuta dos veces.
-- [ ] **T08r — Reescribir `AdminUserSeeder` para asignar el rol en vez de `is_admin`.** Depende de: T07r. RF: RF-25
+- [x] **T08r — Reescribir `AdminUserSeeder` para asignar el rol en vez de `is_admin`.** Depende de: T07r. RF: RF-25
   **Hecho cuando:** tests comprueban que crea `admin@etecnia.es` con el rol `admin` asignado y contraseña `password` válida, y que ejecutarlo dos veces no lo duplica, no le cambia la contraseña ni le asigna el rol dos veces.
 - [x] **T09 — Crear modelo, migración y factory de `categories`.** Depende de: T06b. RF: RF-06, RF-07 (base)
   **Hecho cuando:** un test comprueba que el nombre es único.
-- [ ] **T10r — Añadir `RoleSeeder` a `DatabaseSeeder`, antes de `AdminUserSeeder`.** El resto de `CategorySeeder` y `DatabaseSeeder` no cambia. Depende de: T07r, T08r, T09. RF: RF-06
+- [x] **T10r — Añadir `RoleSeeder` a `DatabaseSeeder`, antes de `AdminUserSeeder`.** El resto de `CategorySeeder` y `DatabaseSeeder` no cambia. Depende de: T07r, T08r, T09. RF: RF-06
   **Hecho cuando:** tests comprueban que existen las categorías iniciales y que ejecutarlo dos veces no duplica; `php artisan migrate:fresh --seed` termina sin errores, con los roles creados antes de asignar el de administrador.
+  (T07r, T08r y T10r se implementaron en un mismo paso: `AdminUserSeeder` ya asignaba el rol, y sin `RoleSeeder` en `DatabaseSeeder` antes, la suite no se mantenía en verde.)
 
 ## Fase 2 — Acceso y roles
 

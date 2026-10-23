@@ -45,11 +45,11 @@ class UserFactory extends Factory
 
     /**
      * Indicate that the user is an administrator.
+     *
+     * Assumes the `admin` role already exists (see RoleSeeder).
      */
     public function admin(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'is_admin' => true,
-        ]);
+        return $this->afterCreating(fn (User $user) => $user->assignRole('admin'));
     }
 }
