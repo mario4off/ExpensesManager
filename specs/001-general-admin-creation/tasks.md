@@ -15,7 +15,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** `php artisan --version` responde y `git status` muestra `AGENTS.md`, `CLAUDE.md`, `docs/`, `specs/` y `.claude/` sin modificar.
 - [x] **T02 — Instalar Pest con un test de humo.** Depende de: T01. RF: —
   **Hecho cuando:** `./vendor/bin/pest` termina en verde con ese test.
-- [ ] **T03 — Instalar Filament y crear el panel único.** Depende de: T02. RF: —
+- [x] **T03 — Instalar Filament y crear el panel único.** Depende de: T02. RF: —
   **Hecho cuando:** un test comprueba que la ruta del panel existe y responde.
 - [ ] **T04 — Fijar idioma, zona horaria y traducciones.** Locale `es`, zona `Europe/Madrid`, `laravel-lang/lang`. Depende de: T03. RF: RF-13 (base), mensajes en español
   **Hecho cuando:** un test comprueba el locale, la zona horaria y que el mensaje de validación `required` sale en español.
