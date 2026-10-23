@@ -17,7 +17,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** `./vendor/bin/pest` termina en verde con ese test.
 - [x] **T03 — Instalar Filament y crear el panel único.** Depende de: T02. RF: —
   **Hecho cuando:** un test comprueba que la ruta del panel existe y responde.
-- [ ] **T04 — Fijar idioma, zona horaria y traducciones.** Locale `es`, zona `Europe/Madrid`, `laravel-lang/lang`. Depende de: T03. RF: RF-13 (base), mensajes en español
+- [x] **T04 — Fijar idioma, zona horaria y traducciones.** Locale `es`, zona `Europe/Madrid`, `laravel-lang/lang`. Depende de: T03. RF: RF-13 (base), mensajes en español
   **Hecho cuando:** un test comprueba el locale, la zona horaria y que el mensaje de validación `required` sale en español.
 - [ ] **T05 — Configurar el disco `s3` solo por `.env`.** Driver S3, privado, sin valores literales. Depende de: T03. RF: RF-19 (base)
   **Hecho cuando:** `.env.example` trae las claves `AWS_*` vacías, un test comprueba que el disco `s3` es privado y `git grep` no encuentra credenciales en código.
