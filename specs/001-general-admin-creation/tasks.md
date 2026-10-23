@@ -6,7 +6,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Antes de empezar
 
-- [ ] **T00 — Aprobar los tres puntos del plan.** Esquema, dependencias (`league/flysystem-aws-s3-v3`, `laravel-lang/lang`) e interpretación de la regla 6.
+- [x] **T00 — Aprobar los tres puntos del plan.** Esquema, dependencias (`league/flysystem-aws-s3-v3`, `laravel-lang/lang`) e interpretación de la regla 6.
   **Hecho cuando:** el usuario confirma los tres puntos por escrito.
 
 ## Fase 0 — Base
