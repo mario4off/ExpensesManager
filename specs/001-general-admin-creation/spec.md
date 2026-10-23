@@ -11,6 +11,7 @@ Registrar gastos personales por categorías y conservar sus tickets y facturas e
 - Dos roles: administrador y usuario normal. Los usuarios los crea el administrador.
 - Moneda única: EUR.
 - Documentos en S3 privado; descarga a través de la aplicación con las credenciales del `.env`, solo para el dueño.
+- Base de datos MySQL.
 
 ## Requisitos funcionales (EARS)
 
@@ -56,6 +57,10 @@ Registrar gastos personales por categorías y conservar sus tickets y facturas e
 ### Datos iniciales
 
 - **RF-25** Cuando se ejecute la carga inicial de datos (seeder), el sistema creará un usuario administrador inicial con email `admin@etecnia.es` y contraseña `password`, sin duplicarlo si ya existe. Son credenciales solo de desarrollo y deben cambiarse fuera de local.
+
+### Plataforma
+
+- **RF-26** El sistema almacenará los datos de usuarios, categorías, gastos y documentos en una base de datos MySQL, con la conexión configurada solo en el `.env`.
 
 ## Fuera de alcance
 

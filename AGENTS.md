@@ -5,6 +5,7 @@ Aplicación de gastos personales en Laravel + Filament: registrar gastos por cat
 El foco del proyecto es **experimentar con la creación del chatbot**; el resto es CRUD estándar.
 - Panel y CRUD: recursos de Filament.
 - Asistente: componente Livewire personalizado, con conversación temporal guardada en la sesión (sin persistencia en base de datos).
+- Base de datos: MySQL (también en los tests, con una base de datos de pruebas aparte).
 - Documentos: almacenados en S3.
 - RAG sobre documentos: AWS Bedrock.
 - Consultas sobre gastos: SQL.

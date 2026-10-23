@@ -1,5 +1,5 @@
 # Constitución — ExpensesManager
-1. Stack fijo: Laravel + Filament + Livewire + Pest; S3 (documentos) y Bedrock (RAG). Nada fuera sin aprobación.
+1. Stack fijo: Laravel + Filament + Livewire + Pest; MySQL (base de datos), S3 (documentos) y Bedrock (RAG). Nada fuera sin aprobación.
 2. Filament primero: todo el CRUD con recursos de Filament; solo el asistente es Livewire propio.
 3. Fases en orden: conversación en sesión → SQL → RAG. Una fase por spec; no se adelanta la siguiente.
 4. Conversación efímera: el historial vive solo en sesión; ninguna tabla ni fichero lo persiste.

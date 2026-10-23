@@ -1,6 +1,6 @@
 # Plan 001 — Administración básica de gastos
 
-Implementa `spec.md` (RF-01 a RF-25). Respeta `docs/constitution.md`.
+Implementa `spec.md` (RF-01 a RF-26). Respeta `docs/constitution.md`.
 
 ## Puntos que requieren aprobación (reglas 12 y 13)
 
@@ -14,7 +14,7 @@ Este plan propone esquema y dependencias; no se ejecuta nada hasta que se aprueb
 
 | # | Módulo | Contenido | RF |
 |---|--------|-----------|----|
-| 0 | Base | Proyecto Laravel con Filament y Pest, panel único, locale `es`, zona horaria `Europe/Madrid`, disco `s3` configurado solo por `.env`, config de subida (límites de PHP y de Livewire ≥ 10 MB) | RF-13, RF-19 (cimientos) |
+| 0 | Base | Proyecto Laravel con Filament y Pest, panel único, locale `es`, zona horaria `Europe/Madrid`, disco `s3` configurado solo por `.env`, conexión MySQL por `.env` para desarrollo y una base de datos aparte para las pruebas, config de subida (límites de PHP y de Livewire ≥ 10 MB) | RF-13, RF-19, RF-26 (cimientos) |
 | 1 | Acceso y roles | Panel con login y sin registro; `UserResource` visible solo para administradores; `UserPolicy` | RF-01, RF-02, RF-03 |
 | 2 | Categorías | `CategoryResource`; `CategoryPolicy`: ver para todos, crear, editar y borrar solo administrador; bloqueo de borrado con gastos | RF-07, RF-08, RF-09 |
 | 3 | Gastos | `ExpenseResource` con formulario, tabla, filtros y orden; consulta acotada al usuario; `ExpensePolicy` | RF-04, RF-05, RF-10 a RF-15 |
@@ -30,6 +30,8 @@ Orden de implementación: 0, 5 (el administrador hace falta para entrar), 1, 2, 
 - **expenses**: `id`, `user_id` (FK a users, borrado en cascada), `category_id` (FK a categories, **restrict**), `spent_on` (fecha), `amount` (decimal 10,2), `description` (texto, nulo), marcas de tiempo. Índice compuesto `(user_id, spent_on)` para el listado. No hay columna de moneda: es siempre EUR. RF-10 a RF-15.
 - **expense_documents**: `id`, `expense_id` (FK a expenses, cascada solo como red de seguridad), `type` (ticket o factura), `path` (clave en S3), `original_name`, `mime_type`, `size`, marcas de tiempo. RF-16 a RF-24.
 
+Motor MySQL (RF-26): tablas InnoDB, necesario para que las claves foráneas con restrict y cascada se apliquen, y codificación `utf8mb4`.
+
 Claves de S3: con prefijo por usuario y nombre aleatorio, para que no colisionen y no revelen datos. El nombre original solo vive en la base de datos.
 
 ## Decisiones justificadas
@@ -38,6 +40,7 @@ Claves de S3: con prefijo por usuario y nombre aleatorio, para que no colisionen
 |----------|---------|------------------------|
 | Rol con `users.is_admin` | Solo hay dos roles fijos; no justifica una dependencia (regla 12) | Paquete de roles y permisos o Filament Shield: más superficie, dependencia y migraciones para un caso binario |
 | `category_id` con restrict más comprobación previa en Filament | La base de datos garantiza la integridad aunque falle la interfaz; la comprobación da el mensaje en español (RF-09) | `nullOnDelete` (gastos huérfanos) o cascada (pérdida de datos de otros usuarios) |
+| Los tests usan una base de datos MySQL de pruebas, separada de la de desarrollo (RF-26) | Las garantías que importan, como restrict en la categoría (RF-09), la unicidad y los decimales exactos (RF-11), dependen del motor y SQLite las trata distinto | SQLite en memoria: más rápido, pero un test en verde no probaría el comportamiento real en MySQL |
 | Importe como decimal(10,2) | Las sumas SQL de la fase 2 salen directas y 2 decimales es lo que pide RF-11 | Entero en céntimos: obliga a convertir en cada formulario y en cada consulta del asistente |
 | Aislamiento en `getEloquentQuery` del recurso, más policies | Filament devuelve 404 si el registro no está en la consulta del recurso (RF-05); la policy es la segunda barrera | Global scope en el modelo: afectaría a seeders, tests y al asistente de la fase 2, y oculta errores |
 | El administrador también ve solo sus gastos | RF-04 no hace excepciones | Vista global para el administrador: contradice la spec |
@@ -54,6 +57,8 @@ Claves de S3: con prefijo por usuario y nombre aleatorio, para que no colisionen
 
 - **Fallo parcial al borrar varios archivos:** si S3 falla en el segundo de tres documentos, el primero ya no existe y el registro sigue. Mitigación: la descarga de un archivo ausente muestra un error en español, no una excepción. No se resuelve del todo sin un proceso de reconciliación, que queda fuera de alcance.
 - **Límites de PHP:** `upload_max_filesize` y `post_max_size` por defecto son menores de 10 MB y rechazarían archivos válidos. El módulo 0 los fija y un test comprueba la regla de Livewire.
+- **MySQL de pruebas:** hace falta un servidor MySQL local y una base de datos de pruebas creada; los tests son algo más lentos que con SQLite. Si la base de pruebas no existe, la suite falla con un error de conexión, no de lógica. Una pasada de tests no debe tocar la base de datos de desarrollo.
+- **SQLite heredado:** el esqueleto de T01 dejó `.env` con SQLite y un fichero `database/database.sqlite` con migraciones ya ejecutadas; se sustituyen por MySQL en T06b.
 - **Idempotencia del seeder:** si el administrador ya existe, no se le cambia la contraseña. Las credenciales `admin@etecnia.es` / `password` son solo de desarrollo (RF-25).
 
 ## Estrategia de tests
@@ -95,6 +100,7 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-23 | El dueño descarga el contenido exacto; no se usa URL firmada |
 | RF-24 | Un usuario ajeno recibe 404 al intentar descargar |
 | RF-25 | El seeder crea el administrador con `is_admin`; ejecutarlo dos veces no lo duplica ni cambia su contraseña |
+| RF-26 | La conexión por defecto es `mysql`, se configura con variables de entorno y los tests corren contra una base de datos distinta de la de desarrollo |
 
 **Tests de arquitectura (Pest arch):** no hay controladores propios para el CRUD ni vistas Blade manuales (criterio 5).
 
@@ -102,4 +108,4 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 
 ## Cobertura de la spec
 
-RF-01 a RF-03 → módulo 1. RF-04 y RF-05 → módulos 3 y 4. RF-06 y RF-25 → módulo 5. RF-07 a RF-09 → módulo 2. RF-10 a RF-15 → módulo 3. RF-16 a RF-24 → módulo 4. RF-13 y RF-19 tienen además cimientos en el módulo 0. Ningún RF queda sin módulo ni sin test.
+RF-01 a RF-03 → módulo 1. RF-04 y RF-05 → módulos 3 y 4. RF-06 y RF-25 → módulo 5. RF-07 a RF-09 → módulo 2. RF-10 a RF-15 → módulo 3. RF-16 a RF-24 → módulo 4. RF-26 → módulo 0. RF-13 y RF-19 tienen además cimientos en el módulo 0. Ningún RF queda sin módulo ni sin test.

@@ -26,11 +26,13 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 1 — Datos iniciales
 
-- [ ] **T07 — Añadir `users.is_admin` y el estado `admin` de la factory.** Depende de: T02. RF: RF-03 (base)
+- [ ] **T06b — Configurar MySQL para desarrollo y pruebas.** Conexión `mysql` solo por `.env`, base de datos de pruebas aparte, y retirar el SQLite heredado de T01. Depende de: T02. RF: RF-26
+  **Hecho cuando:** un test comprueba que la conexión por defecto es `mysql` y que la de pruebas usa una base de datos distinta de la de desarrollo, `php artisan migrate:status` conecta, `.env.example` trae las variables `DB_*` sin credenciales reales y no queda `database/database.sqlite`.
+- [ ] **T07 — Añadir `users.is_admin` y el estado `admin` de la factory.** Depende de: T06b. RF: RF-03 (base)
   **Hecho cuando:** un test comprueba que `is_admin` es falso por defecto y que la factory crea administradores.
 - [ ] **T08 — Crear `AdminUserSeeder` idempotente.** Depende de: T07. RF: RF-25
   **Hecho cuando:** tests comprueban que crea `admin@etecnia.es` con `is_admin` y contraseña `password` válida, y que ejecutarlo dos veces no lo duplica ni cambia su contraseña.
-- [ ] **T09 — Crear modelo, migración y factory de `categories`.** Depende de: T02. RF: RF-06, RF-07 (base)
+- [ ] **T09 — Crear modelo, migración y factory de `categories`.** Depende de: T06b. RF: RF-06, RF-07 (base)
   **Hecho cuando:** un test comprueba que el nombre es único.
 - [ ] **T10 — Crear `CategorySeeder` y `DatabaseSeeder`.** Depende de: T08, T09. RF: RF-06
   **Hecho cuando:** tests comprueban que existen las categorías iniciales y que ejecutarlo dos veces no duplica; `php artisan migrate:fresh --seed` termina sin errores.
@@ -100,7 +102,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 - [ ] **T35 — Añadir tests de arquitectura.** Depende de: T34. RF: criterio 5 de `spec.md`
   **Hecho cuando:** los tests comprueban que no hay controladores propios para el CRUD ni vistas Blade manuales.
 - [ ] **T36 — Verificar los criterios de finalización.** Depende de: T35. RF: todos
-  **Hecho cuando:** `./vendor/bin/pest` está en verde, `./vendor/bin/pint` no cambia nada, `git grep` no encuentra credenciales y cada RF-01 a RF-25 tiene al menos un test.
+  **Hecho cuando:** `./vendor/bin/pest` está en verde, `./vendor/bin/pint` no cambia nada, `git grep` no encuentra credenciales y cada RF-01 a RF-26 tiene al menos un test.
 
 ## Cobertura de RF
 
@@ -128,3 +130,4 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | RF-23 | T33 |
 | RF-24 | T34 |
 | RF-25 | T08 |
+| RF-26 | T06b |
