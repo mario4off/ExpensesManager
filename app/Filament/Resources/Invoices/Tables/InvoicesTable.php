@@ -15,7 +15,7 @@ class InvoicesTable
                 TextColumn::make('number')->label('Número')->searchable(),
                 TextColumn::make('client_name')->label('Cliente')->searchable(),
                 TextColumn::make('issued_on')->label('Fecha de emisión')->date(),
-                TextColumn::make('amount')->label('Importe'),
+                TextColumn::make('amount')->label('Importe')->money('EUR'),
             ])
             ->recordActions([
                 EditAction::make(),

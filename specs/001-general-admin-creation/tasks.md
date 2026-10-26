@@ -65,7 +65,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** la migración crea `invoices` con `number` único y `amount` decimal(10,2) (`php artisan migrate:fresh --seed` sin errores).
 - [x] **T16 — Crear `InvoiceResource` con autorización por permiso.** `InvoicePolicy` y navegación por el permiso `invoices`; listado. Depende de: T15, T11. RF: RF-05, RF-06, RF-07
   **Hecho cuando:** tests comprueban que quien tiene `invoices` ve todas las facturas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
-- [ ] **T17 — Crear el formulario de alta de factura.** Número, cliente, fecha de emisión e importe. Depende de: T16, T04. RF: RF-08, RF-16
+- [x] **T17 — Crear el formulario de alta de factura.** Número, cliente, fecha de emisión e importe. Depende de: T16, T04. RF: RF-08, RF-16
   **Hecho cuando:** tests comprueban que se crea con los cuatro campos y que falta cualquiera o un número repetido da error; el importe se ve en EUR (comprobación manual).
 - [ ] **T18 — Validar el importe de la factura.** Depende de: T17. RF: RF-09
   **Hecho cuando:** tests comprueban que 0, negativos y tres decimales se rechazan con mensaje en español y que 0,01 se acepta.
