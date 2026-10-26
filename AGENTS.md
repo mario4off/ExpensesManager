@@ -1,23 +1,28 @@
 # AGENTS.md — ExpensesManager
 
 ## Proyecto
+
 Aplicación de una gestoría ficticia en Laravel + Filament, con dos áreas, Facturas y Seguros: CRUD de cada área y documentos asociados. Los roles y permisos de área se gestionan con Spatie Laravel Permission, y los documentos de S3 se clasifican con un metadato de área. Incluye un asistente de chat que responde en lenguaje natural sobre los gastos y sus documentos.
 El foco del proyecto es **experimentar con la creación del chatbot**; el resto es CRUD estándar.
+
 - Panel y CRUD: recursos de Filament.
 - Asistente: componente Livewire personalizado, con conversación temporal guardada en la sesión (sin persistencia en base de datos).
 - Base de datos: MySQL (también en los tests, con una base de datos de pruebas aparte).
+- Modelo del chat: Ollama local, provisional para pruebas e intercambiable por OpenAI.
 - Documentos: almacenados en S3.
 - RAG sobre documentos: AWS Bedrock.
 - Consultas sobre gastos: SQL.
 
 ## Fases del chatbot
-1. Asistente Livewire con conversación en sesión.
+
+1. Asistente Livewire con conversación en sesión y modelo local de Ollama provisional intermcabiable.
 2. Consultas SQL sobre gastos y categorías.
 3. RAG con Bedrock sobre los documentos de S3.
 
 Implementa solo la fase pedida. No adelantes fases posteriores.
 
 ## Comandos
+
 - Instalar: `composer install && npm install`
 - Ejecutar: `composer dev` (alternativa: `php artisan serve`)
 - Migraciones: `php artisan migrate`
@@ -27,12 +32,14 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 - Crear un recurso de Filament: `php artisan make:filament-resource Model`
 
 ## Estilo y convenciones
+
 - PHP y Laravel en sus versiones estables actuales; sigue PSR-12 vía Pint.
 - Referencias (clases, métodos, variables, tablas, claves) en inglés.
 - Mensajes al usuario (interfaz, validaciones, respuestas del asistente) en español.
 - Tests con Pest, no PHPUnit clásico.
 
 ## Reglas
+
 - Lee `docs/constitution.md` antes de tocar código.
 - Usa recursos, formularios y tablas de Filament para todo lo que no sea el asistente. No crees controladores ni vistas Blade a mano para el CRUD.
 - El asistente es un componente Livewire propio, no un widget de Filament.
@@ -43,8 +50,9 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 - Pregunta antes de cambiar el esquema de la base de datos o la estructura de las fases.
 
 ## Al terminar cualquier tarea
+
 - Si la tarea toca una función crítica (autorización, validaciones de negocio, documentos en S3), escribe primero el test Pest y verifica que falla; implementa hasta que pase. No crees tests de configuración ni de apariencia.
 - Ejecuta `./vendor/bin/pest` y confirma que pasa (si ya hay tests).
 - Ejecuta `./vendor/bin/pint`.
 - Si has creado o modificado migraciones, ejecuta `php artisan migrate:refresh --seed` para que la base de desarrollo quede con el esquema y los datos de ejemplo al día.
-- Mockea S3 y Bedrock en los tests: nunca llames a AWS real.
+- Mockea S3, Bedrock, Ollama y OpenAI en los tests: nunca llames a AWS, Ollama ni OpenAI reales.

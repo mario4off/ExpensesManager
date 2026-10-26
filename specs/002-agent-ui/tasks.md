@@ -6,7 +6,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 0 — Constitución
 
-- [ ] **T01 — Enmendar la constitución y `AGENTS.md`.** Regla 1: Ollama local como modelo del chat (Bedrock para el RAG). Regla 4: el historial vive solo en la sesión de Laravel, sin tablas ni ficheros propios, y se pierde al cerrar sesión. Regla 9: también se mockea Ollama si hay tests. `AGENTS.md`: Ollama en "Proyecto" y en "Fases". Depende de: —. RF: —
+- [x] **T01 — Enmendar la constitución y `AGENTS.md`.** Regla 1: Ollama local como modelo del chat (Bedrock para el RAG). Regla 4: el historial vive solo en la sesión de Laravel, sin tablas ni ficheros propios, y se pierde al cerrar sesión. Regla 9: también se mockea Ollama si hay tests. `AGENTS.md`: Ollama en "Proyecto" y en "Fases". Depende de: —. RF: —
   **Hecho cuando:** el usuario aprueba por escrito el texto de las enmiendas y los dos documentos reflejan los cuatro cambios.
 
 ## Fase 1 — Base
