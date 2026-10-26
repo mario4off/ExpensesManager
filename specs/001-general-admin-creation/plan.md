@@ -19,7 +19,7 @@ Este plan propone esquema y dependencias; no se ejecuta nada hasta que se aprueb
 | 2 | Facturas | `InvoiceResource` con formulario, tabla ordenada y validaciones; `InvoicePolicy` por permiso `invoices` | RF-05 a RF-11 |
 | 3 | Seguros | `InsurancePolicyResource` con formulario, tabla ordenada y validaciones; `InsurancePolicyPolicy` por permiso `insurance_policies` | RF-05 a RF-07, RF-12 a RF-15 |
 | 4 | Documentos | Modelo `Document` y `document_id` único en cada tabla de área (1:1); un `FileUpload` en el formulario de factura y de póliza; servicio de almacenamiento S3 con metadato de área; descarga desde la vista del registro | RF-17 a RF-26, y RF-06 para documentos |
-| 5 | Datos iniciales | `RoleSeeder` (permisos y roles), seeder de usuarios de prueba y seeder de 3 facturas y 3 pólizas fijas, todos idempotentes, llamados desde `DatabaseSeeder` | RF-27 a RF-29 |
+| 5 | Datos iniciales | `RoleSeeder` (permisos y roles), seeder de usuarios de prueba, ambos idempotentes y llamados desde `DatabaseSeeder` | RF-27 a RF-28 |
 
 Orden de implementación: 0, 5 (los usuarios hacen falta para entrar), 1, 2, 3, 4. Cada paso empieza por sus tests Pest en rojo (regla 8).
 
@@ -47,7 +47,6 @@ Claves de S3: `docs/{area}/{uuid}.{ext}` (carpeta raíz `docs`, una subcarpeta p
 | Visibilidad por área en policies (`viewAny`, `view`) y navegación oculta sin permiso; Filament deniega el acceso por URL si la policy lo niega (RF-06) | Modelo de gestoría: el área es la unidad de acceso (RF-05 a RF-07) | Aislamiento por `user_id`: contradice que quien tiene el área vea todos sus registros |
 | `documents` con `area`, y `document_id` único y con clave foránea en `invoices` e `insurance_policies` | Una sola lógica de subida, borrado y descarga; el `unique` garantiza 0 o 1 documento y la clave foránea da integridad real; el área queda en base de datos y en S3 | Relación polimórfica (`documentable_type` y `documentable_id`): sin clave foránea y con columnas redundantes. Columnas de documento en cada tabla: duplica la lógica |
 | Un único `FileUpload` en el formulario de factura y de póliza | Cada registro tiene 0 o 1 documento (RF-17) | Repeater: innecesario con un solo documento |
-| Datos de ejemplo fijos (3 facturas y 3 pólizas) | Permiten comprobar después consultas con resultados conocidos (RF-29) | Factories aleatorias: los resultados cambiarían en cada carga |
 | Los tests usan una base de datos MySQL de pruebas, separada de la de desarrollo (RF-30) | Las garantías que importan, como la unicidad (RF-08, RF-12), dependen del motor y SQLite las trata distinto | SQLite en memoria: más rápido, pero un test en verde no probaría el comportamiento real en MySQL |
 | Campos de importe y prima con un componente compartido `MoneyInput` (`numeric`, `step(0.01)`, sufijo €, alineado a la derecha) | Un solo sitio para importe y prima; el navegador limita a 2 decimales y la columna decimal(10,2) guarda 2 | Máscara de JavaScript, formato al perder el foco y reglas propias: más código del que pide un PoC. El formato de miles queda para más adelante |
 | Importe y prima como decimal(10,2) | Las sumas SQL de la fase 2 salen directas y 2 decimales es lo que piden RF-09 y RF-13 | Entero en céntimos: obliga a convertir en cada formulario y en cada consulta del asistente |
@@ -111,11 +110,11 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-09, RF-13 | En el formulario, el importe y la prima aceptan 2 decimales y admiten negativos |
 | RF-17, RF-18, RF-20 | Subir un PDF, un JPG, un PNG y un formato inválido en el panel; comprobar el bucket |
 | RF-25 | Descargar un documento desde la vista del registro |
-| RF-27, RF-28, RF-29 | `php artisan migrate:fresh --seed` y comprobar roles, usuarios y registros con tinker |
+| RF-27, RF-28 | `php artisan migrate:fresh --seed` y comprobar roles y usuarios con tinker |
 | RF-30 | `php artisan migrate:status` conecta a MySQL; los datos se guardan en MySQL |
 
 **Cierre de cada módulo:** `./vendor/bin/pest` en verde y `./vendor/bin/pint` sin cambios.
 
 ## Cobertura de la spec
 
-RF-01 a RF-04 → módulo 1. RF-05 a RF-07 → módulos 2, 3 y 4. RF-08 a RF-11 → módulo 2. RF-12 a RF-15 → módulo 3. RF-16 → módulos 0, 2 y 3. RF-17 a RF-26 → módulo 4. RF-27 a RF-29 → módulo 5. RF-30 → módulo 0. Ningún RF queda sin módulo; los críticos tienen test.
+RF-01 a RF-04 → módulo 1. RF-05 a RF-07 → módulos 2, 3 y 4. RF-08 a RF-11 → módulo 2. RF-12 a RF-15 → módulo 3. RF-16 → módulos 0, 2 y 3. RF-17 a RF-26 → módulo 4. RF-27 a RF-28 → módulo 5. RF-30 → módulo 0. Ningún RF queda sin módulo; los críticos tienen test.

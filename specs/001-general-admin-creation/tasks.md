@@ -114,20 +114,6 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 - [ ] **T37 — Denegar el acceso a documentos de un área sin permiso.** Con las policies del registro y de `Document` (por `area`). Depende de: T36. RF: RF-06, RF-26
   **Hecho cuando:** tests comprueban que un usuario sin el permiso del área no puede ver ni descargar un documento.
 
-## Fase 6 — Datos de ejemplo
-
-- [ ] **T38 — Sembrar 3 facturas de ejemplo.** Valores fijos, idempotente. Depende de: T15. RF: RF-29
-  **Hecho cuando:** `php artisan db:seed` crea 3 facturas con los valores fijos, y ejecutarlo dos veces no duplica (comprobación con tinker).
-- [ ] **T39 — Sembrar 3 pólizas de ejemplo y registrar ambos seeders.** Valores fijos, idempotente; ambos seeders en `DatabaseSeeder`. Depende de: T21, T38. RF: RF-29
-  **Hecho cuando:** `php artisan migrate:fresh --seed` termina sin errores y crea 3 pólizas con los valores fijos, sin duplicar al repetir (comprobación con tinker).
-
-## Fase 7 — Cierre
-
-- [ ] **T40 — Revisar que no hay CRUD manual.** Depende de: T37, T39. RF: criterio 5 de `spec.md`
-  **Hecho cuando:** `ls app/Http/Controllers` y `resources/views` no contienen controladores ni vistas del CRUD (revisión manual, sin test).
-- [ ] **T41 — Verificar los criterios de finalización.** Depende de: T40. RF: todos
-  **Hecho cuando:** `./vendor/bin/pest` está en verde, `./vendor/bin/pint` no cambia nada, `git grep` no encuentra credenciales y cada RF crítico tiene test.
-
 ## Cobertura de RF
 
 | RF | Tareas |
@@ -157,5 +143,4 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | RF-26 | T37 |
 | RF-27 | T10b |
 | RF-28 | T10c |
-| RF-29 | T38, T39 |
 | RF-30 | T06b |

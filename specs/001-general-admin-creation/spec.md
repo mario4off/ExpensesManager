@@ -66,7 +66,6 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 
 - **RF-27** Cuando se ejecute la carga inicial de datos (seeder), el sistema creará los permisos `invoices` e `insurance_policies` y los roles `admin` (con ambos permisos), `invoices` (con `invoices`) e `insurance_policies` (con `insurance_policies`), sin duplicarlos.
 - **RF-28** Cuando se ejecute la carga inicial de datos, el sistema creará tres usuarios de prueba con contraseña `password`: `facturas@etecnia.es` con rol `invoices`, `seguros@etecnia.es` con rol `insurance_policies` y `admin@etecnia.es` con rol `admin`, sin duplicarlos si ya existen. Son credenciales solo de desarrollo y deben cambiarse fuera de local.
-- **RF-29** Cuando se ejecute la carga inicial de datos, el sistema creará 3 facturas y 3 pólizas de ejemplo con valores fijos, sin duplicarlas.
 
 ### Plataforma
 
