@@ -3,9 +3,16 @@
 namespace App\Filament\Resources\InsurancePolicies\Schemas;
 
 use App\Filament\Forms\Components\MoneyInput;
+use App\Models\Document;
+use App\Models\InsurancePolicy;
+use App\Services\DocumentStorage;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class InsurancePolicyForm
 {
@@ -36,6 +43,41 @@ class InsurancePolicyForm
                 MoneyInput::make('premium')
                     ->label('Prima')
                     ->required(),
+                FileUpload::make('document_id')
+                    ->label('Documento')
+                    ->acceptedFileTypes(['application/pdf', 'image/png'])
+                    ->maxSize(10240)
+                    ->fetchFileInformation(false)
+                    ->downloadable()
+                    ->openable()
+                    ->getUploadedFileUsing(function (string $file, ?InsurancePolicy $record): ?array {
+                        // The field state comes from the client: only the record's own document is shown.
+                        $document = (string) $record?->document_id === $file ? Document::find($file) : null;
+
+                        if (! $document) {
+                            return null;
+                        }
+
+                        return [
+                            'name' => $document->original_name,
+                            'size' => 0,
+                            'type' => str_ends_with($document->path, '.pdf') ? 'application/pdf' : 'image/png',
+                            'url' => Storage::disk('s3')->temporaryUrl($document->path, now()->addMinutes(30)),
+                        ];
+                    })
+                    ->deleteUploadedFileUsing(function (string $file, ?InsurancePolicy $record): void {
+                        // The field state comes from the client: only the record's own document can be deleted.
+                        abort_unless((string) $record?->document_id === $file, 403);
+
+                        $document = Document::findOrFail($file);
+
+                        DB::transaction(function () use ($document) {
+                            InsurancePolicy::where('document_id', $document->id)->update(['document_id' => null]);
+
+                            app(DocumentStorage::class)->delete($document);
+                        });
+                    })
+                    ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => (string) app(DocumentStorage::class)->store($file, 'insurance_policies')->getKey()),
             ]);
     }
 }

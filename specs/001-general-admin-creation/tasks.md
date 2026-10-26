@@ -99,7 +99,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests con `Storage::fake('s3')` comprueban que el archivo queda en `s3` con esa clave y el metadato de área, que el disco local no recibe nada, y el helper de `tests/Pest.php` simula fallos al escribir y al borrar.
 - [x] **T30 — Añadir el documento al formulario de factura.** Un único `FileUpload`. Incluye la relación `document()` (`belongsTo`) en `Invoice` y `document_id` en su `Fillable`. Depende de: T17, T29. RF: RF-17, RF-20, RF-21
   **Hecho cuando:** tests crean una factura sin documento y con uno, con el archivo en `s3` y metadato `invoices`, y nada en local.
-- [ ] **T31 — Añadir el documento al formulario de póliza.** Un único `FileUpload`. Incluye la relación `document()` (`belongsTo`) en `InsurancePolicy` y `document_id` en su `Fillable`. Depende de: T23, T29. RF: RF-17, RF-20, RF-21
+- [x] **T31 — Añadir el documento al formulario de póliza.** Un único `FileUpload`. Incluye la relación `document()` (`belongsTo`) en `InsurancePolicy` y `document_id` en su `Fillable`. Depende de: T23, T29. RF: RF-17, RF-20, RF-21
   **Hecho cuando:** tests crean una póliza sin documento y con uno, con el archivo en `s3` y metadato `insurance_policies`, y nada en local.
 - [ ] **T32 — Validar formato y tamaño de documentos.** Depende de: T30, T31, T06. RF: RF-18, RF-19
   **Hecho cuando:** tests comprueban que un documento de formato o tamaño inválido no crea registro ni documento; que PDF, JPG y PNG y el límite de 10 MB se aceptan se comprueba manualmente.
