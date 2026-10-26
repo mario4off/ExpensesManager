@@ -8,7 +8,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 
 - Gestoría ficticia con dos áreas: Facturas y Seguros.
 - Roles y permisos con Spatie Laravel-permission: permisos de área `invoices` e `insurance_policies`; roles `admin`, `invoices` e `insurance_policies`.
-- El rol `admin` tiene los dos permisos, gestiona los usuarios y decide qué permisos de área tiene cada rol.
+- El rol `admin` tiene los dos permisos y gestiona los usuarios: al crear un usuario le asigna o le quita roles. Los roles y sus permisos son fijos: no se crean, borran ni modifican desde el panel.
 - Quien tiene el permiso de un área ve todos los registros de esa área.
 - Moneda única: EUR.
 - Cada factura o póliza tiene como máximo un documento, guardado en S3 privado con un metadato de área; la descarga pasa por la aplicación con las credenciales del `.env`.
@@ -21,7 +21,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 - **RF-01** Cuando un visitante no autenticado acceda al panel, el sistema le pedirá iniciar sesión.
 - **RF-02** El sistema no permitirá el registro público de usuarios.
 - **RF-03** Cuando un usuario con rol `admin` lo solicite, el sistema permitirá crear usuarios y asignarles uno o varios roles.
-- **RF-04** Cuando un usuario con rol `admin` cambie los permisos de área de un rol, el sistema aplicará el cambio al acceso de todos los usuarios con ese rol.
+- **RF-04** Mientras un usuario tenga varios roles, el sistema le dará acceso a las áreas de todos ellos.
 
 ### Autorización por área
 
@@ -79,7 +79,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 - Multimoneda.
 - Registro público de usuarios y recuperación de contraseña autoservicio.
 - Más áreas que Facturas y Seguros.
-- Crear o borrar roles y permisos desde el panel.
+- Crear, borrar o modificar roles y permisos desde el panel (los roles y sus permisos son fijos).
 - Más de un documento por registro.
 
 ## Criterios de finalización

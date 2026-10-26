@@ -15,7 +15,7 @@ Este plan propone esquema y dependencias; no se ejecuta nada hasta que se aprueb
 | # | Módulo | Contenido | RF |
 |---|--------|-----------|----|
 | 0 | Base | Proyecto Laravel con Filament y Pest, panel único, locale `es`, zona horaria `Europe/Madrid`, disco `s3` configurado solo por `.env`, conexión MySQL por `.env` para desarrollo y una base de datos aparte para las pruebas, config de subida (límites de PHP y de Livewire ≥ 10 MB) | RF-16, RF-20, RF-30 (cimientos) |
-| 1 | Acceso, roles y permisos | Panel con login y sin registro; `UserResource` solo para el rol `admin`, con un `RolesRelationManager` que asigna roles y edita los permisos de área de los roles existentes; no hay `RoleResource` | RF-01 a RF-04 |
+| 1 | Acceso, roles y permisos | Panel con login y sin registro; `UserResource` solo para el rol `admin`, con un selector de roles al crear el usuario; los roles y sus permisos son fijos (sin `RoleResource` ni relation manager) | RF-01 a RF-04 |
 | 2 | Facturas | `InvoiceResource` con formulario, tabla ordenada y validaciones; `InvoicePolicy` por permiso `invoices` | RF-05 a RF-11 |
 | 3 | Seguros | `InsurancePolicyResource` con formulario, tabla ordenada y validaciones; `InsurancePolicyPolicy` por permiso `insurance_policies` | RF-05 a RF-07, RF-12 a RF-15 |
 | 4 | Documentos | Modelo `Document` y `document_id` único en cada tabla de área (1:1); un `FileUpload` en el formulario de factura y de póliza; servicio de almacenamiento S3 con metadato de área; descarga desde la vista del registro | RF-17 a RF-26, y RF-06 para documentos |
@@ -41,9 +41,9 @@ Claves de S3: `{area}/{uuid}.{ext}`, con el metadato `area` en el objeto (RF-21)
 
 | Decisión | Por qué | Alternativa descartada |
 |----------|---------|------------------------|
-| Roles con `spatie/laravel-permission` | Decisión explícita del usuario; permite que el `admin` cambie qué áreas ve cada rol (RF-04) | La columna `users.is_admin`: más simple, pero no permite reasignar áreas a un rol |
-| Autorizar las áreas por **permiso** (`can('invoices')`), no por nombre de rol | Cambiar los permisos de un rol (RF-04) cambia el acceso sin tocar código | Comprobar nombres de rol: habría que tocar las policies cada vez que un rol gana o pierde un área |
-| Gestión de usuarios y de permisos de roles solo para el rol `admin`, con un relation manager de roles dentro de `UserResource` (asigna roles y edita los permisos de área de cada uno) | Es lo mínimo para RF-03 y RF-04 y no añade un recurso más | `RoleResource` propio: un recurso entero solo para editar dos permisos. Crear o borrar roles y permisos desde el panel: fuera de un PoC de mínimos |
+| Roles con `spatie/laravel-permission` | Decisión explícita del usuario; permite roles por área y que un usuario tenga varios (RF-04) | La columna `users.is_admin`: más simple, pero no admite roles por área ni varios roles |
+| Autorizar las áreas por **permiso** (`can('invoices')`), no por nombre de rol | Un usuario con varios roles obtiene la unión de sus permisos sin lógica extra (RF-04) | Comprobar nombres de rol: habría que combinar roles a mano en cada policy |
+| Gestión de usuarios solo para el rol `admin`; al crear un usuario se le asignan o quitan roles con un selector; los roles y sus permisos son fijos (los carga `RoleSeeder`) | Es lo mínimo para RF-03 y RF-04 | `RoleResource` o relation manager de roles para editar permisos: más superficie de la necesaria para un PoC. Crear o borrar roles desde el panel: fuera de alcance |
 | Visibilidad por área en policies (`viewAny`, `view`) y navegación oculta sin permiso; Filament devuelve 404 si la policy niega el registro (RF-06) | Modelo de gestoría: el área es la unidad de acceso (RF-05 a RF-07) | Aislamiento por `user_id`: contradice que quien tiene el área vea todos sus registros |
 | `documents` con `area`, y `document_id` único y con clave foránea en `invoices` e `insurance_policies` | Una sola lógica de subida, borrado y descarga; el `unique` garantiza 0 o 1 documento y la clave foránea da integridad real; el área queda en base de datos y en S3 | Relación polimórfica (`documentable_type` y `documentable_id`): sin clave foránea y con columnas redundantes. Columnas de documento en cada tabla: duplica la lógica |
 | Un único `FileUpload` en el formulario de factura y de póliza | Cada registro tiene 0 o 1 documento (RF-17) | Repeater: innecesario con un solo documento |
@@ -66,8 +66,6 @@ Claves de S3: `{area}/{uuid}.{ext}`, con el metadato `area` en el objeto (RF-21)
 - **SQLite heredado:** el esqueleto de T01 dejó `.env` con SQLite y un fichero `database/database.sqlite` con migraciones ya ejecutadas; se sustituyeron por MySQL en T06b.
 - **Idempotencia de los seeders:** si un usuario de prueba ya existe, no se le cambia la contraseña. Las credenciales son solo de desarrollo (RF-28).
 - **Cambio de alcance:** las categorías (T09, T10r) y los roles `admin`/`user` (T07r, T08r) ya están implementados. Hay que retirar las categorías y rehacer roles, permisos y seeders (Fase 1b de `tasks.md`).
-- **Efecto del cambio de permisos:** editar los permisos de un rol afecta a todos los usuarios con ese rol, no solo al usuario de la pantalla donde se edita.
-- **Caché de permisos de Spatie:** al cambiar los permisos de un rol hay que usar los métodos de Spatie, que invalidan su caché; si no, el cambio de RF-04 no se vería hasta que caduque.
 
 ## Estrategia de tests
 
@@ -87,7 +85,7 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF | Test |
 |----|------|
 | RF-03 | Un usuario sin rol `admin` no ve el recurso de usuarios ni accede por URL |
-| RF-04 | El `admin` cambia los permisos de un rol desde el relation manager de roles; un usuario sin rol `admin` no puede. Tras dar el permiso `insurance_policies` al rol `invoices`, el usuario de facturas ve los seguros; al quitárselo, deja de verlos |
+| RF-04 | Un usuario con los roles `invoices` e `insurance_policies` ve y accede a las dos áreas |
 | RF-05 | El usuario de facturas no ve el recurso de seguros en la navegación, y al revés |
 | RF-06 | Ver, editar y borrar un registro de un área sin permiso devuelve 404; igual con su documento |
 | RF-07 | Con el permiso, el listado muestra todos los registros del área, sin importar quién los creó |

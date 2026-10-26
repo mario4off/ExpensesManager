@@ -56,8 +56,8 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que el `admin` ve el listado y que un usuario sin ese rol no lo ve en la navegación ni accede por URL.
 - [x] **T13 — Crear usuarios con roles desde el panel.** Además, fijar el orden de navegación para que Usuarios sea la primera sección del `admin` (regla 15). Depende de: T12. RF: RF-03
   **Hecho cuando:** crear en el panel un usuario con un rol y otro con varios; ambos inician sesión, y al entrar en `/admin` el `admin` llega a Usuarios (comprobación manual).
-- [ ] **T14 — Añadir `EditUser` y un `RolesRelationManager` en `UserResource`.** `EditUser` edita nombre y correo, y el `Select` de roles de `UserForm` pasa a verse solo al crear. El relation manager lista los roles del usuario, permite asociar y quitar roles existentes y trae la acción "Editar permisos" (`invoices` e `insurance_policies`, con `syncPermissions`). `RolePolicy` registrada para el modelo `Role` de Spatie: ver y editar solo el `admin`; crear y eliminar roles denegado a todos. No hay `RoleResource`. Depende de: T12, T13. RF: RF-04
-  **Hecho cuando:** tests comprueban que el `admin` cambia los permisos de un rol desde el relation manager, que un usuario sin rol `admin` no puede usar el relation manager ni la acción, y que ni el `admin` puede crear o eliminar roles.
+- [x] **T14 — (Retirada) Gestión de roles.** El `admin` solo asigna o quita roles al crear un usuario (T13); no hay `RoleResource`, relation manager ni edición de permisos de roles. Sin trabajo pendiente.
+  **Hecho cuando:** —
 
 ## Fase 3 — Facturas
 
@@ -88,8 +88,8 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que una fecha de fin anterior a la de inicio se rechaza con mensaje en español y que una igual o posterior se acepta.
 - [ ] **T26 — Editar, eliminar y ordenar pólizas.** Depende de: T23. RF: RF-15
   **Hecho cuando:** editar, eliminar y revisar el orden por fecha de inicio descendente en el panel (comprobación manual).
-- [ ] **T27 — Verificar que cambiar los permisos de un rol cambia el acceso.** Depende de: T14, T16, T22. RF: RF-04
-  **Hecho cuando:** un test comprueba que, tras dar el permiso `insurance_policies` al rol `invoices`, el usuario de facturas ve los seguros, y que al quitárselo deja de verlos, sin cerrar sesión.
+- [ ] **T27 — Verificar que un usuario con varios roles accede a ambas áreas.** Depende de: T10c, T16, T22. RF: RF-04
+  **Hecho cuando:** un test comprueba que un usuario con los roles `invoices` e `insurance_policies` ve y accede a facturas y a pólizas, y que uno con solo `invoices` no accede a las pólizas.
 
 ## Fase 5 — Documentos
 
@@ -135,7 +135,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | _Con test: RF-03 a RF-10, RF-12 a RF-14, RF-19, RF-21 a RF-24, RF-26. El resto, verificación manual (ver `plan.md`)._ | |
 | RF-01, RF-02 | T11 |
 | RF-03 | T12, T13 |
-| RF-04 | T14, T27 |
+| RF-04 | T27 |
 | RF-05, RF-06, RF-07 | T16, T22 (RF-06 también T37) |
 | RF-08 | T15, T17 |
 | RF-09 | T18 |
