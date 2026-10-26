@@ -11,6 +11,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 - El rol `admin` tiene los dos permisos y gestiona los usuarios: al crear un usuario le asigna o le quita roles. Los roles y sus permisos son fijos: no se crean, borran ni modifican desde el panel.
 - Quien tiene el permiso de un área ve todos los registros de esa área.
 - Moneda única: EUR.
+- Los campos de fecha de los formularios usan el selector de fecha de Filament (`native(false)`), no el del navegador.
 - Cada factura o póliza tiene como máximo un documento, guardado en S3 privado con un metadato de área; la descarga pasa por la aplicación con las credenciales del `.env`.
 - Base de datos MySQL.
 

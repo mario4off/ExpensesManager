@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,5 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Intentional: no "Crear y crear otro" button on any create page.
         CreateRecord::disableCreateAnother();
+
+        // Intentional: every date field uses Filament's picker, not the browser's.
+        DatePicker::configureUsing(fn (DatePicker $picker) => $picker->native(false));
     }
 }
