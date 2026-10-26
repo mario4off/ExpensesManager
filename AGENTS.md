@@ -1,7 +1,7 @@
 # AGENTS.md — ExpensesManager
 
 ## Proyecto
-Aplicación de gastos personales en Laravel + Filament: registrar gastos por categorías y subir tickets y facturas. Incluye un asistente de chat que responde en lenguaje natural sobre los gastos y sus documentos.
+Aplicación de una gestoría ficticia en Laravel + Filament, con dos áreas, Facturas y Seguros: CRUD de cada área y documentos asociados. Los roles y permisos de área se gestionan con Spatie Laravel Permission, y los documentos de S3 se clasifican con un metadato de área. Incluye un asistente de chat que responde en lenguaje natural sobre los gastos y sus documentos.
 El foco del proyecto es **experimentar con la creación del chatbot**; el resto es CRUD estándar.
 - Panel y CRUD: recursos de Filament.
 - Asistente: componente Livewire personalizado, con conversación temporal guardada en la sesión (sin persistencia en base de datos).
@@ -35,7 +35,7 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 - Lee `docs/constitution.md` antes de tocar código.
 - Usa recursos, formularios y tablas de Filament para todo lo que no sea el asistente. No crees controladores ni vistas Blade a mano para el CRUD.
 - El asistente es un componente Livewire propio, no un widget de Filament.
-- Subidas de tickets y facturas: disco `s3`. No guardes documentos en local.
+- Subidas de documentos: disco `s3`, con metadato de área. No guardes documentos en local.
 - Toda consulta SQL del asistente debe ser de solo lectura y limitada al usuario autenticado.
 - Credenciales de AWS y claves solo en `.env`; nunca en código ni en commits.
 - No añadas dependencias nuevas sin preguntar.
