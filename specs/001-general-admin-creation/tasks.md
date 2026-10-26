@@ -50,12 +50,12 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 2 — Acceso y roles
 
-- [ ] **T11 — Exigir login y bloquear el registro público.** Depende de: T03, T10c. RF: RF-01, RF-02
+- [x] **T11 — Exigir login y bloquear el registro público.** Depende de: T03, T10c. RF: RF-01, RF-02
   **Hecho cuando:** abrir `/admin` sin sesión redirige al login y no existe ruta de registro (comprobación manual).
-- [ ] **T12 — Restringir `UserResource` al rol `admin`.** `UserPolicy` apoyada en `hasRole('admin')` y recurso con listado. Depende de: T11. RF: RF-03
+- [x] **T12 — Restringir `UserResource` al rol `admin`.** `UserPolicy` apoyada en `hasRole('admin')` y recurso con listado. Depende de: T11. RF: RF-03
   **Hecho cuando:** tests comprueban que el `admin` ve el listado y que un usuario sin ese rol no lo ve en la navegación ni accede por URL.
-- [ ] **T13 — Crear usuarios con roles desde el panel.** Depende de: T12. RF: RF-03
-  **Hecho cuando:** crear en el panel un usuario con un rol y otro con varios; ambos inician sesión (comprobación manual).
+- [ ] **T13 — Crear usuarios con roles desde el panel.** Además, fijar el orden de navegación para que Usuarios sea la primera sección del `admin` (regla 15). Depende de: T12. RF: RF-03
+  **Hecho cuando:** crear en el panel un usuario con un rol y otro con varios; ambos inician sesión, y al entrar en `/admin` el `admin` llega a Usuarios (comprobación manual).
 - [ ] **T14 — Crear `RoleResource` para editar los permisos de área.** Solo `admin`; solo edita los permisos de los roles existentes, sin crear ni borrar roles. Depende de: T12. RF: RF-04
   **Hecho cuando:** tests comprueban que el `admin` cambia los permisos de un rol, que un usuario sin rol `admin` no accede, y que no hay acciones de crear ni borrar.
 

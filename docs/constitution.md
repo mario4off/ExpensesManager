@@ -13,3 +13,4 @@
 12. Dependencias y esquema: no se añaden paquetes ni se cambia el esquema de BD sin preguntar.
 13. Spec antes de código: cada cambio parte de una spec activa; sin spec, no se toca código.
 14. Acceso por área: Spatie Laravel Permission con permisos de área (`invoices`, `insurance_policies`) asignados a roles; cada usuario solo accede a los recursos y documentos de las áreas que permiten sus roles.
+15. Punto de entrada: el sistema no tiene dashboard. Cada usuario entra a la primera sección que su rol le permite ver; el `admin` entra siempre a Usuarios. Todo usuario tiene al menos una sección permitida.
