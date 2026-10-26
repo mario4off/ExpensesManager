@@ -42,6 +42,7 @@ class InvoiceForm
                     ->maxSize(10240)
                     ->downloadable()
                     ->openable()
+                    ->fetchFileInformation(false)
                     ->getUploadedFileUsing(function (string $file): ?array {
                         $document = Document::find($file);
 
