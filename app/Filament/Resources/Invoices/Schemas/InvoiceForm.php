@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Invoices\Schemas;
 
+use App\Filament\Forms\Components\MoneyInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -24,11 +25,9 @@ class InvoiceForm
                 DatePicker::make('issued_on')
                     ->label('Fecha de emisión')
                     ->required(),
-                TextInput::make('amount')
+                MoneyInput::make('amount')
                     ->label('Importe')
-                    ->required()
-                    ->numeric()
-                    ->prefix('€'),
+                    ->required(),
             ]);
     }
 }

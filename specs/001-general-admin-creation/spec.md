@@ -32,20 +32,20 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 ### Facturas
 
 - **RF-08** Cuando se registre una factura, el sistema exigirá número de factura (único), nombre del cliente, fecha de emisión e importe.
-- **RF-09** Si el importe no es mayor que 0 o tiene más de 2 decimales, el sistema rechazará la factura con un mensaje en español.
+- **RF-09** El sistema limitará el campo de importe a 2 decimales y admitirá importes negativos.
 - **RF-10** Si la fecha de emisión es futura, el sistema rechazará la factura con un mensaje en español.
 - **RF-11** El sistema permitirá editar y eliminar facturas, y las listará ordenadas por fecha de emisión descendente.
 
 ### Seguros
 
 - **RF-12** Cuando se registre una póliza, el sistema exigirá número de póliza (único), nombre del tomador, aseguradora, fecha de inicio, fecha de fin y prima.
-- **RF-13** Si la prima no es mayor que 0 o tiene más de 2 decimales, el sistema rechazará la póliza con un mensaje en español.
+- **RF-13** El sistema limitará el campo de prima a 2 decimales y admitirá primas negativas.
 - **RF-14** Si la fecha de fin es anterior a la fecha de inicio, el sistema rechazará la póliza con un mensaje en español.
 - **RF-15** El sistema permitirá editar y eliminar pólizas, y las listará ordenadas por fecha de inicio descendente.
 
 ### Común
 
-- **RF-16** El sistema expresará todos los importes y primas en EUR. En los formularios se escriben con coma decimal y un máximo de 2 decimales, y al perder el foco se muestran con punto de millar y coma decimal (por ejemplo, 1.234,50).
+- **RF-16** El sistema expresará todos los importes y primas en EUR.
 
 ### Documentos
 
@@ -84,7 +84,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 
 ## Criterios de finalización
 
-1. Los RF críticos (RF-03 a RF-10, RF-12 a RF-14, RF-19, RF-21 a RF-24, RF-26) tienen test Pest escrito antes de implementar y verificado en rojo, y todos pasan. El resto se verifica manualmente.
+1. Los RF críticos (RF-03 a RF-08, RF-10, RF-12, RF-14, RF-19, RF-21 a RF-24, RF-26) tienen test Pest escrito antes de implementar y verificado en rojo, y todos pasan. El resto se verifica manualmente.
 2. S3 está mockeado en todos los tests; ninguno llama a AWS real.
 3. Un usuario nunca ve ni descarga datos de un área sin su permiso (RF-05, RF-06, RF-26 cubiertos por tests).
 4. Todos los mensajes al usuario están en español; las referencias de código, en inglés.
