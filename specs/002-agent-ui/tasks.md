@@ -18,7 +18,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 2 — Componente
 
-- [ ] **T04 — Crear el componente Livewire `Assistant`.** Historial en la sesión (`assistant.messages`), `send` (valida, antepone el prompt de sistema, llama a `ChatModel`, guarda y recorta a N), `resetConversation`, validación en español (obligatorio, sin solo espacios, máximo 2000) y error en español que no entra en el historial. Depende de: T03. RF: RF-03 a RF-07, RF-09
+- [x] **T04 — Crear el componente Livewire `Assistant`.** Historial en la sesión (`assistant.messages`), `send` (valida, antepone el prompt de sistema, llama a `ChatModel`, guarda y recorta a N), `resetConversation`, validación en español (obligatorio, sin solo espacios, máximo 2000) y error en español que no entra en el historial. Depende de: T03. RF: RF-03 a RF-07, RF-09
   **Hecho cuando:** `php artisan tinker` o la página (T06) permiten enviar mensajes, ver que recuerda los últimos 10, vaciar con "Nueva conversación" y ver el error en español con Ollama apagado.
 - [ ] **T05 — Crear la vista del componente.** Componentes Blade de Filament y Tailwind del panel, sin CSS propio. Burbujas de usuario (texto plano escapado) y asistente (`Str::markdown()` con `html_input => 'strip'`), campo y botón desactivados con "El asistente está escribiendo…" durante la espera, y botón "Nueva conversación". Depende de: T04. RF: RF-08, RF-12
   **Hecho cuando:** en el panel el campo se desactiva mientras responde, las listas y negritas se ven bien y una respuesta con HTML se muestra sin ejecutarse.
