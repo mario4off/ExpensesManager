@@ -31,7 +31,8 @@ class InsurancePolicyForm
                     ->required(),
                 DatePicker::make('ends_on')
                     ->label('Fecha de fin')
-                    ->required(),
+                    ->required()
+                    ->afterOrEqual('starts_on'),
                 MoneyInput::make('premium')
                     ->label('Prima')
                     ->required(),
