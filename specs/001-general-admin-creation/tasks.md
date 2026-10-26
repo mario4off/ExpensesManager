@@ -109,10 +109,6 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que quitar el documento, eliminar el registro y el borrado masivo eliminan el archivo del disco `s3` simulado.
 - [x] **T35 — Conservar el registro si falla el borrado en S3.** Depende de: T34. RF: RF-24
   **Hecho cuando:** un test con S3 caído al borrar comprueba que el registro sigue, que el archivo no se toca y que sale el mensaje en español.
-- [ ] **T36 — Añadir la vista del registro con descarga del documento.** Acción de Filament con streaming desde `s3`. Depende de: T30, T31. RF: RF-25
-  **Hecho cuando:** en el panel, quien tiene el permiso del área descarga el documento y un archivo ausente muestra un error en español (comprobación manual).
-- [ ] **T37 — Denegar el acceso a documentos de un área sin permiso.** Con las policies del registro y de `Document` (por `area`). Depende de: T36. RF: RF-06, RF-26
-  **Hecho cuando:** tests comprueban que un usuario sin el permiso del área no puede ver ni descargar un documento.
 
 ## Cobertura de RF
 

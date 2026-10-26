@@ -46,8 +46,9 @@ class InvoiceForm
                     ->downloadable()
                     ->openable()
                     ->fetchFileInformation(false)
-                    ->getUploadedFileUsing(function (string $file): ?array {
-                        $document = Document::find($file);
+                    ->getUploadedFileUsing(function (string $file, ?Invoice $record): ?array {
+                        // The field state comes from the client: only the record's own document is shown.
+                        $document = (string) $record?->document_id === $file ? Document::find($file) : null;
 
                         if (! $document) {
                             return null;
@@ -60,7 +61,10 @@ class InvoiceForm
                             'url' => Storage::disk('s3')->temporaryUrl($document->path, now()->addMinutes(30)),
                         ];
                     })
-                    ->deleteUploadedFileUsing(function (string $file): void {
+                    ->deleteUploadedFileUsing(function (string $file, ?Invoice $record): void {
+                        // The field state comes from the client: only the record's own document can be deleted.
+                        abort_unless((string) $record?->document_id === $file, 403);
+
                         $document = Document::findOrFail($file);
 
                         DB::transaction(function () use ($document) {
