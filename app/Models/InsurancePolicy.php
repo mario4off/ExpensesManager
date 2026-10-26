@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesDocumentFile;
 use Database\Factories\InsurancePolicyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class InsurancePolicy extends Model
 {
     /** @use HasFactory<InsurancePolicyFactory> */
-    use HasFactory;
+    use DeletesDocumentFile, HasFactory;
 
     /**
      * Get the attributes that should be cast.
