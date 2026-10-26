@@ -78,15 +78,15 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 - [x] **T21 — Crear modelo, migración y factory de `insurance_policies`.** `policy_number` único. Depende de: T10c. RF: RF-12 (base)
   **Hecho cuando:** la migración crea `insurance_policies` con `policy_number` único y `premium` decimal(10,2) (`php artisan migrate:fresh --seed` sin errores).
-- [ ] **T22 — Crear `InsurancePolicyResource` con autorización por permiso.** `InsurancePolicyPolicy` y navegación por el permiso `insurance_policies`; listado, con las acciones del registro agrupadas en `ActionGroup`. Depende de: T21, T11. RF: RF-05, RF-06, RF-07
-  **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
+- [x] **T22 — Crear `InsurancePolicyResource` con autorización por permiso.** `InsurancePolicyPolicy` y navegación por el permiso `insurance_policies`; listado. Depende de: T21, T11. RF: RF-05, RF-06, RF-07
+  **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso ni accede al listado por URL.
 - [ ] **T23 — Crear el formulario de alta de póliza.** Número, tomador, aseguradora, fecha de inicio, fecha de fin y prima. Depende de: T22, T04. RF: RF-12, RF-16
-  **Hecho cuando:** tests comprueban que se crea con los seis campos y que falta cualquiera o un número repetido da error; la prima se ve en EUR (comprobación manual).
+  **Hecho cuando:** tests comprueban que se crea con los seis campos, que falta cualquiera o un número repetido da error y que sin el permiso la URL de edición da 403; la prima se ve en EUR (comprobación manual).
 - [ ] **T24 — Usar `MoneyInput` en la prima.** Reutiliza el componente de T18. Depende de: T23, T18. RF: RF-13, RF-16
   **Hecho cuando:** el formulario de póliza usa `MoneyInput` para la prima y el navegador solo permite 2 decimales (comprobación manual, sin test).
 - [ ] **T25 — Validar las fechas de la póliza.** Depende de: T23. RF: RF-14
   **Hecho cuando:** tests comprueban que una fecha de fin anterior a la de inicio se rechaza con mensaje en español y que una igual o posterior se acepta.
-- [ ] **T26 — Editar, eliminar y ordenar pólizas.** Depende de: T23. RF: RF-15
+- [ ] **T26 — Editar, eliminar y ordenar pólizas.** Acciones del registro agrupadas en `ActionGroup`. Depende de: T23. RF: RF-15
   **Hecho cuando:** editar, eliminar y revisar el orden por fecha de inicio descendente en el panel (comprobación manual).
 - [ ] **T27 — Verificar que un usuario con varios roles accede a ambas áreas.** Depende de: T10c, T16, T22. RF: RF-04
   **Hecho cuando:** un test comprueba que un usuario con los roles `invoices` e `insurance_policies` ve y accede a facturas y a pólizas, y que uno con solo `invoices` no accede a las pólizas.
