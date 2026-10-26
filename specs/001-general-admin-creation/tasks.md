@@ -80,7 +80,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** la migración crea `insurance_policies` con `policy_number` único y `premium` decimal(10,2) (`php artisan migrate:fresh --seed` sin errores).
 - [x] **T22 — Crear `InsurancePolicyResource` con autorización por permiso.** `InsurancePolicyPolicy` y navegación por el permiso `insurance_policies`; listado. Depende de: T21, T11. RF: RF-05, RF-06, RF-07
   **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso ni accede al listado por URL.
-- [ ] **T23 — Crear el formulario de alta de póliza.** Número, tomador, aseguradora, fecha de inicio, fecha de fin y prima. Depende de: T22, T04. RF: RF-12, RF-16
+- [x] **T23 — Crear el formulario de alta de póliza.** Número, tomador, aseguradora, fecha de inicio, fecha de fin y prima. Depende de: T22, T04. RF: RF-12, RF-16
   **Hecho cuando:** tests comprueban que se crea con los seis campos, que falta cualquiera o un número repetido da error y que sin el permiso la URL de edición da 403; la prima se ve en EUR (comprobación manual).
 - [ ] **T24 — Usar `MoneyInput` en la prima.** Reutiliza el componente de T18. Depende de: T23, T18. RF: RF-13, RF-16
   **Hecho cuando:** el formulario de póliza usa `MoneyInput` para la prima y el navegador solo permite 2 decimales (comprobación manual, sin test).

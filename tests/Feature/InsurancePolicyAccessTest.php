@@ -24,3 +24,15 @@ it('does not offer the policies resource without the insurance_policies permissi
 
     Livewire::test(ListInsurancePolicies::class)->assertForbidden();
 });
+
+it('denies a policy requested by URL without the insurance_policies permission', function () {
+    $policy = InsurancePolicy::factory()->create();
+
+    $this->actingAs(User::factory()->invoices()->create())
+        ->get("/admin/insurance-policies/{$policy->id}/edit")
+        ->assertForbidden();
+
+    $this->actingAs(User::factory()->insurancePolicies()->create())
+        ->get("/admin/insurance-policies/{$policy->id}/edit")
+        ->assertOk();
+});
