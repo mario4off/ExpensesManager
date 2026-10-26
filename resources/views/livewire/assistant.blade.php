@@ -60,7 +60,7 @@
         </div>
     </x-filament::section>
 
-    <form x-on:submit.prevent="submitMessage()" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+    <form x-on:submit.prevent="submitMessage()" style="flex-shrink: 0; display: flex; margin-bottom: 40px;  flex-direction: column; gap: 0.5rem;">
         <x-filament::input.wrapper :valid="! $errors->has('message')">
             <x-filament::input
                 type="text"
@@ -76,12 +76,10 @@
             <p style="color: var(--danger-600); font-size: 0.875rem;">{{ $message }}</p>
         @enderror
 
-        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <x-filament::button type="submit" x-bind:disabled="busy">
-                Enviar
-            </x-filament::button>
-
-            @if (count($messages) > 0)
+  
+      
+<div style="display: flex; justify-content: space-between;  margin-top: 10px; ; width: 100%;">    
+    @if (count($messages) > 0)
                 <x-filament::button
                     color="gray"
                     wire:click="resetConversation"
@@ -91,6 +89,10 @@
                     Nueva conversación
                 </x-filament::button>
             @endif
-        </div>
+                  <x-filament::button type="submit" x-bind:disabled="busy">
+                Enviar
+            </x-filament::button></div>
+   
+
     </form>
 </div>
