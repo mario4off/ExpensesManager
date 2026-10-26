@@ -6,8 +6,9 @@ use Database\Factories\InvoiceFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['number', 'client_name', 'issued_on', 'amount'])]
+#[Fillable(['number', 'client_name', 'issued_on', 'amount', 'document_id'])]
 class Invoice extends Model
 {
     /** @use HasFactory<InvoiceFactory> */
@@ -24,5 +25,10 @@ class Invoice extends Model
             'issued_on' => 'date',
             'amount' => 'decimal:2',
         ];
+    }
+
+    public function document(): BelongsTo
+    {
+        return $this->belongsTo(Document::class);
     }
 }
