@@ -45,4 +45,5 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 - Si la tarea toca una función crítica (autorización, validaciones de negocio, documentos en S3), escribe primero el test Pest y verifica que falla; implementa hasta que pase. No crees tests de configuración ni de apariencia.
 - Ejecuta `./vendor/bin/pest` y confirma que pasa (si ya hay tests).
 - Ejecuta `./vendor/bin/pint`.
+- Si has creado o modificado migraciones, ejecuta `php artisan migrate:refresh --seed` para que la base de desarrollo quede con el esquema y los datos de ejemplo al día.
 - Mockea S3 y Bedrock en los tests: nunca llames a AWS real.
