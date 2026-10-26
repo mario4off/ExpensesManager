@@ -32,7 +32,7 @@ class InvoiceForm
                 DatePicker::make('issued_on')
                     ->label('Fecha de emisión')
                     ->required()
-                    ->maxDate(fn() => today()),
+                    ->maxDate(fn () => today()),
                 MoneyInput::make('amount')
                     ->label('Importe')
                     ->required(),
@@ -66,7 +66,7 @@ class InvoiceForm
                             app(DocumentStorage::class)->delete($document);
                         });
                     })
-                    ->saveUploadedFileUsing(fn(TemporaryUploadedFile $file) => (string) app(DocumentStorage::class)->store($file, 'invoices')->getKey()),
+                    ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => (string) app(DocumentStorage::class)->store($file, 'invoices')->getKey()),
             ]);
     }
 }

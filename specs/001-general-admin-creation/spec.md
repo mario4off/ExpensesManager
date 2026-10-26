@@ -52,8 +52,8 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 ### Documentos
 
 - **RF-17** El sistema permitirá guardar una factura o póliza sin documento, o con un único documento.
-- **RF-18** El sistema solo aceptará documentos PDF, JPG o PNG de hasta 10 MB.
-- **RF-19** Si un documento no cumple formato o tamaño, el sistema lo rechazará con un mensaje en español y no guardará el registro de forma parcial.
+- **RF-18** El sistema solo aceptará documentos PDF o PNG de hasta 10 MB.
+- **RF-19** Si un documento no cumple formato o tamaño, el sistema lo rechazará con un mensaje en español y no lo almacenará, ni en S3 ni como registro de documento.
 - **RF-20** El sistema almacenará los documentos únicamente en S3, nunca en disco local.
 - **RF-21** Cuando el sistema guarde un documento en S3, le añadirá un metadato con su área (`invoices` o `insurance_policies`).
 - **RF-22** Si falla la subida a S3, el sistema no guardará el registro, informará en español y no dejará registros de documento sin archivo.

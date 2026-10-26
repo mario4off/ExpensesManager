@@ -108,7 +108,7 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-11, RF-15 | Editar, eliminar y revisar el orden del listado en el panel |
 | RF-16 | Ver importes y primas en EUR en el panel |
 | RF-09, RF-13 | En el formulario, el importe y la prima aceptan 2 decimales y admiten negativos |
-| RF-17, RF-18, RF-20 | Subir un PDF, un JPG, un PNG y un formato inválido en el panel; comprobar el bucket |
+| RF-17, RF-18, RF-20 | Subir un PDF, un PNG y un formato inválido en el panel; comprobar el bucket |
 | RF-25 | Descargar un documento desde la vista del registro |
 | RF-27, RF-28 | `php artisan migrate:fresh --seed` y comprobar roles y usuarios con tinker |
 | RF-30 | `php artisan migrate:status` conecta a MySQL; los datos se guardan en MySQL |
