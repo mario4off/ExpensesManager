@@ -20,7 +20,7 @@ function createPolicyBetween(string $startsOn, string $endsOn)
             'insurer' => 'Mapfre',
             'starts_on' => $startsOn,
             'ends_on' => $endsOn,
-            'premium' => '350.75',
+            'premium' => '350,75',
         ])
         ->call('create');
 }

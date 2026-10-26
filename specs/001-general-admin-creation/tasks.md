@@ -84,7 +84,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que se crea con los seis campos, que falta cualquiera o un número repetido da error y que sin el permiso la URL de edición da 403; la prima se ve en EUR (comprobación manual).
 - [x] **T24 — Usar `MoneyInput` en la prima.** Reutiliza el componente de T18. Depende de: T23, T18. RF: RF-13, RF-16
   **Hecho cuando:** el formulario de póliza usa `MoneyInput` para la prima y el navegador solo permite 2 decimales (comprobación manual, sin test).
-- [ ] **T25 — Validar las fechas de la póliza.** Depende de: T23. RF: RF-14
+- [x] **T25 — Validar las fechas de la póliza.** Depende de: T23. RF: RF-14
   **Hecho cuando:** tests comprueban que una fecha de fin anterior a la de inicio se rechaza con mensaje en español y que una igual o posterior se acepta.
 - [ ] **T26 — Editar, eliminar y ordenar pólizas.** Acciones del registro agrupadas en `ActionGroup`. Depende de: T23. RF: RF-15
   **Hecho cuando:** editar, eliminar y revisar el orden por fecha de inicio descendente en el panel (comprobación manual).
