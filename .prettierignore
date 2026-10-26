@@ -1,0 +1,6 @@
+# Pint formats PHP; Prettier must not reformat it.
+*.php
+
+# Spec-driven documents keep their hand-written layout.
+specs/
+docs/
