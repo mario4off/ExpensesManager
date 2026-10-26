@@ -103,7 +103,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests crean una póliza sin documento y con uno, con el archivo en `s3` y metadato `insurance_policies`, y nada en local.
 - [x] **T32 — Validar formato y tamaño de documentos.** Depende de: T30, T31, T06. RF: RF-18, RF-19
   **Hecho cuando:** tests comprueban que un documento de formato o tamaño inválido no se almacena (ni archivo en `s3` ni registro de documento); que PDF y PNG y el límite de 10 MB se aceptan se comprueba manualmente.
-- [ ] **T33 — Hacer atómica la subida.** Transacción y borrado compensatorio. Depende de: T30, T31. RF: RF-22
+- [x] **T33 — Hacer atómica la subida.** Transacción y borrado compensatorio. Depende de: T30, T31. RF: RF-22
   **Hecho cuando:** un test con S3 caído al subir comprueba que no hay registro, ni documento, ni archivo huérfano, y que sale el mensaje en español.
 - [ ] **T34 — Borrar el archivo al quitar el documento o eliminar el registro.** Eventos `deleting` en `Invoice` e `InsurancePolicy` (trait compartido). Depende de: T30, T31. RF: RF-23
   **Hecho cuando:** tests comprueban que quitar el documento, eliminar el registro y el borrado masivo eliminan el archivo del disco `s3` simulado.

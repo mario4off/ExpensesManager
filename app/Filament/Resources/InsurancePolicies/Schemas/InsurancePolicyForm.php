@@ -9,10 +9,13 @@ use App\Services\DocumentStorage;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
+use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Throwable;
 
 class InsurancePolicyForm
 {
@@ -77,7 +80,20 @@ class InsurancePolicyForm
                             app(DocumentStorage::class)->delete($document);
                         });
                     })
-                    ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => (string) app(DocumentStorage::class)->store($file, 'insurance_policies')->getKey()),
+                    ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                        try {
+                            return (string) app(DocumentStorage::class)->store($file, 'insurance_policies')->getKey();
+                        } catch (Throwable $exception) {
+                            report($exception);
+
+                            Notification::make()
+                                ->title('No se pudo subir el documento. No se ha guardado el registro; inténtalo de nuevo.')
+                                ->danger()
+                                ->send();
+
+                            throw new Halt;
+                        }
+                    }),
             ]);
     }
 }

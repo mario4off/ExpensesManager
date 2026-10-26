@@ -52,6 +52,19 @@ class DocumentStorage
     }
 
     /**
+     * Delete the document with the given id, if it exists. Used to undo an upload
+     * whose record could not be saved.
+     */
+    public function discard(int|string|null $documentId): void
+    {
+        $document = Document::find($documentId);
+
+        if ($document) {
+            $this->delete($document);
+        }
+    }
+
+    /**
      * @return resource|null
      */
     public function readStream(Document $document)
