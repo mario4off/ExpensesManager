@@ -24,7 +24,8 @@ class InvoiceForm
                     ->maxLength(255),
                 DatePicker::make('issued_on')
                     ->label('Fecha de emisión')
-                    ->required(),
+                    ->required()
+                    ->maxDate(fn () => today()),
                 MoneyInput::make('amount')
                     ->label('Importe')
                     ->required(),

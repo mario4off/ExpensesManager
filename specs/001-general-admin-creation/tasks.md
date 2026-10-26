@@ -69,7 +69,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que se crea con los cuatro campos y que falta cualquiera o un número repetido da error; el importe se ve en EUR (comprobación manual).
 - [x] **T18 — Crear el `MoneyInput` compartido para el importe de la factura.** Componente que sustituye al `TextInput` numérico de T17: `numeric`, `step(0.01)`, sufijo €, alineado a la derecha, sin reglas propias ni JavaScript. Se admiten importes negativos. Depende de: T17. RF: RF-09, RF-16
   **Hecho cuando:** el formulario de factura usa `MoneyInput` y el navegador solo permite 2 decimales en el importe (comprobación manual, sin test).
-- [ ] **T19 — Validar la fecha de emisión.** Depende de: T17. RF: RF-10
+- [x] **T19 — Validar la fecha de emisión.** Depende de: T17. RF: RF-10
   **Hecho cuando:** tests con la hora fijada comprueban que mañana se rechaza y que hoy se acepta, también a las 23:59 y a las 00:01.
 - [ ] **T20 — Editar, eliminar y ordenar facturas.** Depende de: T17. RF: RF-11
   **Hecho cuando:** editar, eliminar y revisar el orden por fecha de emisión descendente en el panel (comprobación manual).
