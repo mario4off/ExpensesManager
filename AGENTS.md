@@ -24,6 +24,7 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 - Tests: `./vendor/bin/pest`
 - Un test: `./vendor/bin/pest --filter="nombre del test"`
 - Formato: `./vendor/bin/pint`
+- Crear un recurso de Filament: `php artisan make:filament-resource Model`
 
 ## Estilo y convenciones
 - PHP y Laravel en sus versiones estables actuales; sigue PSR-12 vía Pint.
