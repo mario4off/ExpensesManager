@@ -76,7 +76,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 4 — Seguros
 
-- [ ] **T21 — Crear modelo, migración y factory de `insurance_policies`.** `policy_number` único. Depende de: T10c. RF: RF-12 (base)
+- [x] **T21 — Crear modelo, migración y factory de `insurance_policies`.** `policy_number` único. Depende de: T10c. RF: RF-12 (base)
   **Hecho cuando:** la migración crea `insurance_policies` con `policy_number` único y `premium` decimal(10,2) (`php artisan migrate:fresh --seed` sin errores).
 - [ ] **T22 — Crear `InsurancePolicyResource` con autorización por permiso.** `InsurancePolicyPolicy` y navegación por el permiso `insurance_policies`; listado, con las acciones del registro agrupadas en `ActionGroup`. Depende de: T21, T11. RF: RF-05, RF-06, RF-07
   **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
