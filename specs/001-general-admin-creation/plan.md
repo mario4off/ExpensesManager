@@ -18,7 +18,7 @@ Este plan propone esquema y dependencias; no se ejecuta nada hasta que se aprueb
 | 1 | Acceso, roles y permisos | Panel con login y sin registro; `UserResource` solo para el rol `admin`, con un selector de roles al crear el usuario; los roles y sus permisos son fijos (sin `RoleResource` ni relation manager) | RF-01 a RF-04 |
 | 2 | Facturas | `InvoiceResource` con formulario, tabla ordenada y validaciones; `InvoicePolicy` por permiso `invoices` | RF-05 a RF-11 |
 | 3 | Seguros | `InsurancePolicyResource` con formulario, tabla ordenada y validaciones; `InsurancePolicyPolicy` por permiso `insurance_policies` | RF-05 a RF-07, RF-12 a RF-15 |
-| 4 | Documentos | Modelo `Document` y `document_id` único en cada tabla de área (1:1); un `FileUpload` en el formulario de factura y de póliza; servicio de almacenamiento S3 con metadato de área; descarga desde la vista del registro | RF-17 a RF-26, y RF-06 para documentos |
+| 4 | Documentos | Modelo `Document` y `document_id` único en cada tabla de área (1:1); un `FileUpload` en el formulario de factura y de póliza; servicio de almacenamiento S3 con metadato de área | RF-17 a RF-24, y RF-06 para documentos |
 | 5 | Datos iniciales | `RoleSeeder` (permisos y roles), seeder de usuarios de prueba, ambos idempotentes y llamados desde `DatabaseSeeder` | RF-27 a RF-28 |
 
 Orden de implementación: 0, 5 (los usuarios hacen falta para entrar), 1, 2, 3, 4. Cada paso empieza por sus tests Pest en rojo (regla 8).
@@ -29,7 +29,7 @@ Orden de implementación: 0, 5 (los usuarios hacen falta para entrar), 1, 2, 3, 
 - Tablas de `spatie/laravel-permission`: permisos `invoices` e `insurance_policies`; roles `admin` (ambos permisos), `invoices` e `insurance_policies` (su permiso), precargados por `RoleSeeder`. RF-04, RF-27.
 - **invoices**: `id`, `number` (único), `client_name`, `issued_on` (fecha), `amount` (decimal 10,2), `document_id` (nulo, único, clave foránea a `documents`), marcas de tiempo. RF-08 a RF-11.
 - **insurance_policies**: `id`, `policy_number` (único), `holder_name`, `insurer`, `starts_on` (fecha), `ends_on` (fecha), `premium` (decimal 10,2), `document_id` (nulo, único, clave foránea a `documents`), marcas de tiempo. RF-12 a RF-15.
-- **documents**: `id`, `area` (`invoices` o `insurance_policies`), `path` (clave en S3), `original_name`, marcas de tiempo. Sin tipo MIME ni tamaño: se validan al subir pero no se guardan. RF-17 a RF-26.
+- **documents**: `id`, `area` (`invoices` o `insurance_policies`), `path` (clave en S3), `original_name`, marcas de tiempo. Sin tipo MIME ni tamaño: se validan al subir pero no se guardan. RF-17 a RF-24.
 
 No hay columna de moneda: es siempre EUR.
 
@@ -45,7 +45,7 @@ Claves de S3: `docs/{area}/{uuid}.{ext}` (carpeta raíz `docs`, una subcarpeta p
 | Autorizar las áreas por **permiso** (`can('invoices')`), no por nombre de rol | Un usuario con varios roles obtiene la unión de sus permisos sin lógica extra (RF-04) | Comprobar nombres de rol: habría que combinar roles a mano en cada policy |
 | Gestión de usuarios solo para el rol `admin`; al crear un usuario se le asignan o quitan roles con un selector; los roles y sus permisos son fijos (los carga `RoleSeeder`) | Es lo mínimo para RF-03 y RF-04 | `RoleResource` o relation manager de roles para editar permisos: más superficie de la necesaria para un PoC. Crear o borrar roles desde el panel: fuera de alcance |
 | Visibilidad por área en policies (`viewAny`, `view`) y navegación oculta sin permiso; Filament deniega el acceso por URL si la policy lo niega (RF-06) | Modelo de gestoría: el área es la unidad de acceso (RF-05 a RF-07) | Aislamiento por `user_id`: contradice que quien tiene el área vea todos sus registros |
-| `documents` con `area`, y `document_id` único y con clave foránea en `invoices` e `insurance_policies` | Una sola lógica de subida, borrado y descarga; el `unique` garantiza 0 o 1 documento y la clave foránea da integridad real; el área queda en base de datos y en S3 | Relación polimórfica (`documentable_type` y `documentable_id`): sin clave foránea y con columnas redundantes. Columnas de documento en cada tabla: duplica la lógica |
+| `documents` con `area`, y `document_id` único y con clave foránea en `invoices` e `insurance_policies` | Una sola lógica de subida y borrado; el `unique` garantiza 0 o 1 documento y la clave foránea da integridad real; el área queda en base de datos y en S3 | Relación polimórfica (`documentable_type` y `documentable_id`): sin clave foránea y con columnas redundantes. Columnas de documento en cada tabla: duplica la lógica |
 | Un único `FileUpload` en el formulario de factura y de póliza | Cada registro tiene 0 o 1 documento (RF-17) | Repeater: innecesario con un solo documento |
 | Los tests usan una base de datos MySQL de pruebas, separada de la de desarrollo (RF-30) | Las garantías que importan, como la unicidad (RF-08, RF-12), dependen del motor y SQLite las trata distinto | SQLite en memoria: más rápido, pero un test en verde no probaría el comportamiento real en MySQL |
 | Campos de importe y prima con un componente compartido `MoneyInput` (`numeric`, `step(0.01)`, sufijo €, alineado a la derecha) | Un solo sitio para importe y prima; el navegador limita a 2 decimales y la columna decimal(10,2) guarda 2 | Máscara de JavaScript, formato al perder el foco y reglas propias: más código del que pide un PoC. El formato de miles queda para más adelante |
@@ -53,7 +53,6 @@ Claves de S3: `docs/{area}/{uuid}.{ext}` (carpeta raíz `docs`, una subcarpeta p
 | Subida y guardado en una transacción, con compensación | Si algo falla, se revierte la base de datos y se borra de S3 el archivo ya subido en ese intento (RF-22) | Guardar primero y reparar después: deja registros sin archivo |
 | Borrado: archivo en S3 primero, registro después, dentro de una transacción | Si S3 falla se lanza la excepción, se revierte y el registro queda intacto (RF-24). Borrar una clave inexistente en S3 no da error | Borrar el registro y encolar la limpieza: contradice RF-24 y deja huérfanos |
 | El borrado de archivos vive en eventos `deleting` de `Invoice` e `InsurancePolicy` (trait compartido), que borran el archivo y la fila de `documents` | Cubre borrado individual, masivo y quitar el documento del formulario, porque todos pasan por el modelo | Confiar en la cascada de la base de datos: no dispara eventos y dejaría archivos huérfanos |
-| Descarga como acción de Filament en la vista del registro, con streaming desde el disco `s3` usando las credenciales del `.env` | Es la decisión del usuario; no hay URL pública ni ruta propia que adivinar, así que RF-26 es estructural y la policy lo refuerza | URL temporal firmada: descartada por el usuario. Controlador propio: prohibido por AGENTS.md |
 | Validación en servidor: tipos y tamaño de Filament más reglas de Laravel (`before_or_equal:today`, `after_or_equal:starts_on`, `min`) | La validación de cliente no es una garantía (RF-10, RF-14, RF-18) | Confiar solo en `minValue` o `maxDate` del campo |
 | Zona horaria `Europe/Madrid` | "Fecha futura" debe evaluarse en la fecha local, también cerca de medianoche (RF-10) | UTC por defecto: aceptaría o rechazaría mal las facturas de hoy |
 | Paquete `laravel-lang/lang` para el español de Laravel; Filament ya trae el suyo; mensajes personalizados solo donde la regla lo pide (por ejemplo, fallo de S3) | Cubre todos los mensajes de validación sin mantener a mano un fichero de traducción que se desactualiza | Escribir `lang/es` a mano: trabajo repetido y mensajes que faltan al actualizar Laravel |
@@ -71,7 +70,7 @@ Claves de S3: `docs/{area}/{uuid}.{ext}` (carpeta raíz `docs`, una subcarpeta p
 
 Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Test primero en rojo (regla 8) **solo en lo crítico**.
 
-**Crítico (lleva test):** autorización (rol `admin` para usuarios y roles, permisos de área), validaciones de negocio (número único, importe y prima, fechas) y documentos en S3 (sin guardado parcial, metadato de área, atomicidad, borrado y fallo de borrado). **No crítico (sin test, verificación manual o por comando):** login y registro de Filament, EUR, orden de listados, editar y borrar básico, seeders, configuración, logo, descarga y arquitectura.
+**Crítico (lleva test):** autorización (rol `admin` para usuarios y roles, permisos de área), validaciones de negocio (número único, importe y prima, fechas) y documentos en S3 (sin guardado parcial, metadato de área, atomicidad, borrado y fallo de borrado). **No crítico (sin test, verificación manual o por comando):** login y registro de Filament, EUR, orden de listados, editar y borrar básico, seeders, configuración, logo y arquitectura.
 
 **S3 (regla 9, RF-20):**
 
@@ -98,7 +97,6 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-22 | Con S3 caído al subir: no hay registro, ni documento, ni archivo huérfano, y sale el mensaje |
 | RF-23 | Quitar el documento y borrar el registro eliminan su archivo del disco `s3` simulado |
 | RF-24 | Con S3 caído al borrar: el registro sigue, el mensaje sale y el archivo no se toca |
-| RF-26 | Un usuario sin el permiso del área no puede descargar |
 
 **Verificación manual (sin test):**
 
@@ -109,7 +107,6 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-16 | Ver importes y primas en EUR en el panel |
 | RF-09, RF-13 | En el formulario, el importe y la prima aceptan 2 decimales y admiten negativos |
 | RF-17, RF-18, RF-20 | Subir un PDF, un PNG y un formato inválido en el panel; comprobar el bucket |
-| RF-25 | Descargar un documento desde la vista del registro |
 | RF-27, RF-28 | `php artisan migrate:fresh --seed` y comprobar roles y usuarios con tinker |
 | RF-30 | `php artisan migrate:status` conecta a MySQL; los datos se guardan en MySQL |
 
@@ -117,4 +114,4 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 
 ## Cobertura de la spec
 
-RF-01 a RF-04 → módulo 1. RF-05 a RF-07 → módulos 2, 3 y 4. RF-08 a RF-11 → módulo 2. RF-12 a RF-15 → módulo 3. RF-16 → módulos 0, 2 y 3. RF-17 a RF-26 → módulo 4. RF-27 a RF-28 → módulo 5. RF-30 → módulo 0. Ningún RF queda sin módulo; los críticos tienen test.
+RF-01 a RF-04 → módulo 1. RF-05 a RF-07 → módulos 2, 3 y 4. RF-08 a RF-11 → módulo 2. RF-12 a RF-15 → módulo 3. RF-16 → módulos 0, 2 y 3. RF-17 a RF-24 → módulo 4. RF-27 a RF-28 → módulo 5. RF-30 → módulo 0. Ningún RF queda sin módulo; los críticos tienen test.

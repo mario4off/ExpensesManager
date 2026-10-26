@@ -13,7 +13,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 - Moneda única: EUR.
 - Los campos de fecha de los formularios usan el selector de fecha de Filament (`native(false)`), no el del navegador.
 - Las acciones de cada registro de una tabla se agrupan en un único menú (`ActionGroup`), no como botones sueltos.
-- Cada factura o póliza tiene como máximo un documento, guardado en S3 privado con un metadato de área; la descarga pasa por la aplicación con las credenciales del `.env`.
+- Cada factura o póliza tiene como máximo un documento, guardado en S3 privado con un metadato de área.
 - Base de datos MySQL.
 
 ## Requisitos funcionales (EARS)
@@ -59,8 +59,6 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 - **RF-22** Si falla la subida a S3, el sistema no guardará el registro, informará en español y no dejará registros de documento sin archivo.
 - **RF-23** Cuando se quite el documento de un registro o se elimine el registro, el sistema borrará también el archivo de S3.
 - **RF-24** Si falla el borrado en S3, el sistema informará del error en español y no eliminará el registro, para no dejar archivos huérfanos ni registros sin archivo.
-- **RF-25** Cuando un usuario con el permiso del área solicite la descarga de un documento, el sistema se la servirá usando las credenciales del `.env`, con el bucket privado.
-- **RF-26** Si quien solicita la descarga no tiene el permiso del área, el sistema la denegará.
 
 ### Datos iniciales
 
@@ -85,9 +83,9 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 
 ## Criterios de finalización
 
-1. Los RF críticos (RF-03 a RF-08, RF-10, RF-12, RF-14, RF-19, RF-21 a RF-24, RF-26) tienen test Pest escrito antes de implementar y verificado en rojo, y todos pasan. El resto se verifica manualmente.
+1. Los RF críticos (RF-03 a RF-08, RF-10, RF-12, RF-14, RF-19, RF-21 a RF-24) tienen test Pest escrito antes de implementar y verificado en rojo, y todos pasan. El resto se verifica manualmente.
 2. S3 está mockeado en todos los tests; ninguno llama a AWS real.
-3. Un usuario nunca ve ni descarga datos de un área sin su permiso (RF-05, RF-06, RF-26 cubiertos por tests).
+3. Un usuario nunca ve datos de un área sin su permiso (RF-05, RF-06 cubiertos por tests).
 4. Todos los mensajes al usuario están en español; las referencias de código, en inglés.
 5. Todo el CRUD usa recursos de Filament; sin controladores ni vistas Blade manuales (se verifica revisando el código).
 6. `./vendor/bin/pest` en verde y `./vendor/bin/pint` sin cambios.

@@ -114,11 +114,11 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 | RF | Tareas |
 |----|--------|
-| _Con test: RF-03 a RF-10, RF-12 a RF-14, RF-19, RF-21 a RF-24, RF-26. El resto, verificación manual (ver `plan.md`)._ | |
+| _Con test: RF-03 a RF-10, RF-12 a RF-14, RF-19, RF-21 a RF-24. El resto, verificación manual (ver `plan.md`)._ | |
 | RF-01, RF-02 | T11 |
 | RF-03 | T12, T13 |
 | RF-04 | T27 |
-| RF-05, RF-06, RF-07 | T16, T22 (RF-06 también T37) |
+| RF-05, RF-06, RF-07 | T16, T22 |
 | RF-08 | T15, T17 |
 | RF-09 | T18 |
 | RF-10 | T19 |
@@ -135,8 +135,6 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | RF-22 | T33 |
 | RF-23 | T34 |
 | RF-24 | T35 |
-| RF-25 | T36 |
-| RF-26 | T37 |
 | RF-27 | T10b |
 | RF-28 | T10c |
 | RF-30 | T06b |
