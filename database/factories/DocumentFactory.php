@@ -22,7 +22,7 @@ class DocumentFactory extends Factory
 
         return [
             'area' => $area,
-            'path' => $area.'/'.Str::uuid().'.pdf',
+            'path' => 'docs/'.$area.'/'.Str::uuid().'.pdf',
             'original_name' => fake()->word().'.pdf',
         ];
     }

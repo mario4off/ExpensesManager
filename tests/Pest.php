@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /*
@@ -47,4 +49,16 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * Replace the s3 disk with one that throws when the given operation
+ * ("put", "delete", ...) is called, to simulate S3 being down.
+ */
+function failS3On(string $operation): void
+{
+    $disk = Mockery::mock(Filesystem::class);
+    $disk->shouldReceive($operation)->andThrow(new RuntimeException('S3 unavailable'));
+
+    Storage::set('s3', $disk);
 }

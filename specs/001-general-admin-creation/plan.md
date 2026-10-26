@@ -35,7 +35,7 @@ No hay columna de moneda: es siempre EUR.
 
 Motor MySQL (RF-30): tablas InnoDB y codificación `utf8mb4`.
 
-Claves de S3: `{area}/{uuid}.{ext}`, con el metadato `area` en el objeto (RF-21). El nombre original solo vive en la base de datos.
+Claves de S3: `docs/{area}/{uuid}.{ext}` (carpeta raíz `docs`, una subcarpeta por área), con el metadato `area` en el objeto (RF-21). El nombre original solo vive en la base de datos.
 
 ## Decisiones justificadas
 
