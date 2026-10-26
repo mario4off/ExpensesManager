@@ -93,13 +93,13 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 5 — Documentos
 
-- [ ] **T28 — Crear modelo, migración y factory de `documents`, y `document_id` en las tablas de área.** `documents` con `area`, `path` y `original_name`; `document_id` nulo, único y con clave foránea en `invoices` e `insurance_policies`. Depende de: T15, T21. RF: RF-17
+- [x] **T28 — Crear modelo, migración y factory de `documents`, y `document_id` en las tablas de área.** `documents` con `area`, `path` y `original_name`; `document_id` nulo, único y con clave foránea en `invoices` e `insurance_policies`. Depende de: T15, T21. RF: RF-17
   **Hecho cuando:** `php artisan migrate:fresh --seed` termina sin errores y las tablas tienen `document_id` único con clave foránea a `documents`.
 - [ ] **T29 — Crear el servicio de almacenamiento S3 y el helper de fallo.** Guardar con clave `{area}/{uuid}.{ext}` y metadato `area`, borrar y leer. Depende de: T05, T28. RF: RF-20, RF-21
   **Hecho cuando:** tests con `Storage::fake('s3')` comprueban que el archivo queda en `s3` con esa clave y el metadato de área, que el disco local no recibe nada, y el helper de `tests/Pest.php` simula fallos al escribir y al borrar.
-- [ ] **T30 — Añadir el documento al formulario de factura.** Un único `FileUpload`. Depende de: T17, T29. RF: RF-17, RF-20, RF-21
+- [ ] **T30 — Añadir el documento al formulario de factura.** Un único `FileUpload`. Incluye la relación `document()` (`belongsTo`) en `Invoice` y `document_id` en su `Fillable`. Depende de: T17, T29. RF: RF-17, RF-20, RF-21
   **Hecho cuando:** tests crean una factura sin documento y con uno, con el archivo en `s3` y metadato `invoices`, y nada en local.
-- [ ] **T31 — Añadir el documento al formulario de póliza.** Un único `FileUpload`. Depende de: T23, T29. RF: RF-17, RF-20, RF-21
+- [ ] **T31 — Añadir el documento al formulario de póliza.** Un único `FileUpload`. Incluye la relación `document()` (`belongsTo`) en `InsurancePolicy` y `document_id` en su `Fillable`. Depende de: T23, T29. RF: RF-17, RF-20, RF-21
   **Hecho cuando:** tests crean una póliza sin documento y con uno, con el archivo en `s3` y metadato `insurance_policies`, y nada en local.
 - [ ] **T32 — Validar formato y tamaño de documentos.** Depende de: T30, T31, T06. RF: RF-18, RF-19
   **Hecho cuando:** tests comprueban que un documento de formato o tamaño inválido no crea registro ni documento; que PDF, JPG y PNG y el límite de 10 MB se aceptan se comprueba manualmente.
