@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\InsurancePolicies\Tables;
 
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -17,6 +20,13 @@ class InsurancePoliciesTable
                 TextColumn::make('starts_on')->label('Fecha de inicio')->date(),
                 TextColumn::make('ends_on')->label('Fecha de fin')->date(),
                 TextColumn::make('premium')->label('Prima')->money('EUR'),
+            ])
+            ->defaultSort('starts_on', 'desc')
+            ->recordActions([
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ]);
     }
 }
