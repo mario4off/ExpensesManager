@@ -33,7 +33,7 @@ Fase 1 del chatbot (ver `AGENTS.md`): una interfaz de chat dentro del panel, con
 ### Entrada y estados
 
 - **RF-07** Si el mensaje está vacío, solo contiene espacios o supera los 2000 caracteres, el sistema lo rechazará con un mensaje en español y no llamará al modelo.
-- **RF-08** Mientras el sistema espera la respuesta del modelo, desactivará el campo y el botón de envío y mostrará "El asistente está escribiendo…".
+- **RF-08** Al enviar, el sistema mostrará inmediatamente el mensaje del usuario y "Pensando…". Mientras espera la respuesta, mantendrá el campo editable y conservará el siguiente borrador; desactivará únicamente el envío y el reinicio de conversación para evitar peticiones simultáneas.
 - **RF-09** Si el modelo no responde (caído, tiempo agotado o error), el sistema mostrará un mensaje en español dentro del chat y no guardará ese intercambio en el historial.
 
 ### Modelo y contenido

@@ -1,6 +1,43 @@
-<div>
-    <x-filament::section>
-        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+<div
+    wire:ignore.self
+    x-data="{
+        draft: '',
+        pendingMessage: '',
+        busy: false,
+        async submitMessage() {
+            if (this.busy || !this.draft.trim()) return;
+
+            this.pendingMessage = this.draft.trim();
+            this.draft = '';
+            this.busy = true;
+            this.$nextTick(() => this.$refs.history.scrollTop = this.$refs.history.scrollHeight);
+
+            try {
+                $wire.$set('message', this.pendingMessage, false);
+                await $wire.send();
+                if ($wire.error) {
+                    if (!this.draft) this.draft = this.pendingMessage;
+                } else {
+                    this.pendingMessage = '';
+                }
+            } catch (error) {
+                if (!this.draft) this.draft = this.pendingMessage;
+            } finally {
+                this.busy = false;
+                this.$nextTick(() => this.$refs.history.scrollTop = this.$refs.history.scrollHeight);
+            }
+        },
+        resize() {
+            const bottomSpacing = parseFloat(getComputedStyle($el.closest('main')).paddingBottom) || 24;
+            $el.style.height = Math.max(0, window.innerHeight - $el.getBoundingClientRect().top - bottomSpacing) + 'px';
+        },
+    }"
+    x-init="$nextTick(() => resize())"
+    x-on:resize.window="resize()"
+    style="display: flex; flex-direction: column; min-height: 0; gap: 1rem;"
+>
+    <x-filament::section x-ref="history" style="flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain;">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; overflow-wrap: anywhere;">
             @forelse ($messages as $item)
                 @if ($item['role'] === 'user')
                     <div style="align-self: flex-end; max-width: 80%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; white-space: pre-wrap; background: color-mix(in oklab, var(--primary-500) 15%, transparent);">{{ $item['content'] }}</div>
@@ -10,24 +47,26 @@
                     </div>
                 @endif
             @empty
-                <p style="opacity: 0.6;">Escribe tu primera pregunta para empezar la conversación.</p>
+                <p x-show="!pendingMessage" style="opacity: 0.6;">Escribe tu primera pregunta para empezar la conversación.</p>
             @endforelse
+
+            <div x-cloak x-show="pendingMessage" x-text="pendingMessage" style="align-self: flex-end; max-width: 80%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; white-space: pre-wrap; background: color-mix(in oklab, var(--primary-500) 15%, transparent);"></div>
+            <p x-cloak x-show="busy" role="status" style="opacity: 0.6;">Pensando…</p>
 
             @if ($error)
                 <div style="align-self: flex-start; max-width: 80%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; color: var(--danger-600); background: color-mix(in oklab, var(--danger-500) 12%, transparent);">{{ $error }}</div>
             @endif
 
-            <p wire:loading wire:target="send" style="opacity: 0.6;">El asistente está escribiendo…</p>
         </div>
     </x-filament::section>
 
-    <form wire:submit="send" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+    <form x-on:submit.prevent="submitMessage()" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 0.5rem;">
         <x-filament::input.wrapper :valid="! $errors->has('message')">
             <x-filament::input
                 type="text"
-                wire:model="message"
-                wire:loading.attr="disabled"
-                wire:target="send"
+                x-model="draft"
+                required
+                maxlength="2000"
                 placeholder="Escribe tu mensaje…"
                 autocomplete="off"
             />
@@ -37,8 +76,8 @@
             <p style="color: var(--danger-600); font-size: 0.875rem;">{{ $message }}</p>
         @enderror
 
-        <div style="display: flex; gap: 0.5rem;">
-            <x-filament::button type="submit" wire:loading.attr="disabled" wire:target="send">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <x-filament::button type="submit" x-bind:disabled="busy">
                 Enviar
             </x-filament::button>
 
@@ -46,8 +85,8 @@
                 <x-filament::button
                     color="gray"
                     wire:click="resetConversation"
-                    wire:loading.attr="disabled"
-                    wire:target="send"
+                    x-on:click="draft = ''; pendingMessage = ''"
+                    x-bind:disabled="busy"
                 >
                     Nueva conversación
                 </x-filament::button>

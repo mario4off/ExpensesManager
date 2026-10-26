@@ -25,7 +25,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 3 — Página
 
-- [ ] **T06 — Añadir la página de Filament "Asistente".** Monta el componente `Assistant`, es la última del menú y no exige permiso de área. Depende de: T05. RF: RF-01, RF-02
+- [x] **T06 — Añadir la página de Filament "Asistente".** Monta el componente `Assistant`, es la última del menú y no exige permiso de área. Depende de: T05. RF: RF-01, RF-02
   **Hecho cuando:** en el panel, un usuario de cada rol ve "Asistente" al final del menú, lo abre y conversa; el punto de entrada de cada rol no cambia.
 
 ## Cierre
