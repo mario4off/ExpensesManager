@@ -21,9 +21,9 @@ No ejecutes `migrate:fresh`, `db:wipe` ni nada que toque la base de datos de des
 
 ## Qué revisar en el código
 - **Constitución y AGENTS.md:** CRUD solo con recursos de Filament (sin controladores ni vistas Blade manuales); ningún documento en disco local; credenciales solo en `.env`; referencias en inglés y mensajes al usuario en español; sin dependencias ni cambios de esquema no aprobados.
-- **Spec:** cada RF de las tareas marcadas como hechas tiene al menos un test, y el comportamiento coincide con su redacción EARS.
+- **Spec:** cada RF **crítico** (autorización, validaciones de negocio, documentos en S3) de las tareas marcadas como hechas tiene al menos un test, y el comportamiento coincide con su redacción EARS.
 - **Autorización por área:** se comprueba por permiso (`can('invoices')`, `can('insurance_policies')`), no por nombre de rol; sin permiso, 404 en registros y documentos.
-- **Tests:** S3 y Bedrock mockeados (`Storage::fake('s3')` o equivalente), sin llamadas reales; los tests prueban comportamiento, no implementación.
+- **Tests:** S3 y Bedrock mockeados (`Storage::fake('s3')` o equivalente), sin llamadas reales; los tests prueban comportamiento, no implementación. No recomiendes tests de configuración, apariencia o comportamiento estándar de Laravel o Filament.
 - **Seguridad:** validación en servidor, sin SQL construido con entrada del usuario, sin secretos en código, tests o commits. Nunca imprimas el contenido de `.env`.
 - **Calidad:** código muerto de fases retiradas (por ejemplo, restos de categorías o del rol `user`), duplicación evitable, transacciones y compensación en la subida y el borrado de S3.
 - **Alcance:** nada del asistente ni de fases posteriores adelantado.

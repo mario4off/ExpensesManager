@@ -6,7 +6,7 @@
 5. SQL seguro: el asistente solo ejecuta consultas de solo lectura, acotadas al usuario autenticado.
 6. Documentos en S3: ningún documento en disco local.
 7. Secretos en `.env`: nunca en código, tests ni commits.
-8. Test primero: antes de escribir código, escribe el test Pest y comprueba que falla; el código se da por terminado cuando ese test pasa.
+8. Test primero en lo crítico: autorización (rol `admin` y permisos de área), validaciones de negocio y documentos en S3 llevan un test Pest escrito antes y verificado en rojo. Configuración, apariencia y comportamiento estándar de Laravel o Filament no llevan test; se verifican a mano.
 9. AWS mockeado: los tests nunca llaman a S3 ni a Bedrock reales.
 10. Calidad: `./vendor/bin/pint` sin cambios y `./vendor/bin/pest` en verde antes de cada commit.
 11. Idioma: referencias (código, nombres de clases, métodos, variables, tablas, claves) en inglés; mensajes al usuario en español.

@@ -70,7 +70,9 @@ Claves de S3: `{area}/{uuid}.{ext}`, con el metadato `area` en el objeto (RF-21)
 
 ## Estrategia de tests
 
-Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Test primero en rojo (regla 8).
+Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Test primero en rojo (regla 8) **solo en lo crítico**.
+
+**Crítico (lleva test):** autorización (rol `admin` para usuarios y roles, permisos de área), validaciones de negocio (número único, importe y prima, fechas) y documentos en S3 (sin guardado parcial, metadato de área, atomicidad, borrado y fallo de borrado). **No crítico (sin test, verificación manual o por comando):** login y registro de Filament, EUR, orden de listados, editar y borrar básico, seeders, configuración, logo, descarga y arquitectura.
 
 **S3 (regla 9, RF-20):**
 
@@ -79,13 +81,11 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 - RF-20: tras subir, el archivo existe en el disco `s3` simulado y el disco local no recibe nada.
 - RF-21: el archivo se escribe con el metadato `area` correcto; se comprueba sobre las opciones con que el servicio llama al disco.
 
-**Matriz RF → tests**
+**Matriz RF → tests (solo críticos)**
 
 | RF | Test |
 |----|------|
-| RF-01 | Un visitante sin sesión que pide el panel es redirigido al login |
-| RF-02 | No existe la ruta de registro |
-| RF-03 | El `admin` crea usuarios con uno o varios roles; un usuario sin rol `admin` no ve el recurso de usuarios ni accede por URL |
+| RF-03 | Un usuario sin rol `admin` no ve el recurso de usuarios ni accede por URL |
 | RF-04 | Tras dar el permiso `insurance_policies` al rol `invoices`, el usuario de facturas ve los seguros; al quitárselo, deja de verlos |
 | RF-05 | El usuario de facturas no ve el recurso de seguros en la navegación, y al revés |
 | RF-06 | Ver, editar y borrar un registro de un área sin permiso devuelve 404; igual con su documento |
@@ -93,31 +93,30 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-08 | Faltan número, cliente, fecha o importe: errores; número repetido: error |
 | RF-09 | Importe 0, negativo o con 3 decimales: error en español; 0,01 válido |
 | RF-10 | Fecha de emisión de mañana: error; la de hoy se acepta, incluso cerca de medianoche |
-| RF-11 | Se editan y eliminan facturas; el listado está ordenado por fecha de emisión descendente |
 | RF-12 | Faltan número de póliza, tomador, aseguradora, fechas o prima: errores; número repetido: error |
 | RF-13 | Prima 0, negativa o con 3 decimales: error en español; 0,01 válida |
 | RF-14 | Fecha de fin anterior a la de inicio: error; igual o posterior: válida |
-| RF-15 | Se editan y eliminan pólizas; el listado está ordenado por fecha de inicio descendente |
-| RF-16 | El importe y la prima se muestran en EUR |
-| RF-17 | Una factura y una póliza se guardan sin documento y con un documento; no se puede adjuntar un segundo |
-| RF-18 | PDF, JPG y PNG aceptados; otro formato rechazado; 10 MB aceptado y 10 MB + 1 rechazado |
 | RF-19 | Con un archivo inválido no se crea el registro ni el documento |
-| RF-20 | Los archivos van a `s3` y nada a local |
 | RF-21 | El archivo se guarda con el metadato de área que corresponde a su registro |
 | RF-22 | Con S3 caído al subir: no hay registro, ni documento, ni archivo huérfano, y sale el mensaje |
 | RF-23 | Quitar el documento y borrar el registro eliminan su archivo del disco `s3` simulado |
 | RF-24 | Con S3 caído al borrar: el registro sigue, el mensaje sale y el archivo no se toca |
-| RF-25 | Quien tiene el permiso del área descarga el contenido exacto; no se usa URL firmada |
 | RF-26 | Un usuario sin el permiso del área recibe 404 al intentar descargar |
-| RF-27 | El seeder crea los dos permisos y los tres roles con sus permisos; ejecutarlo dos veces no duplica |
-| RF-28 | El seeder crea los tres usuarios con su rol; ejecutarlo dos veces no los duplica ni cambia su contraseña |
-| RF-29 | El seeder crea 3 facturas y 3 pólizas con los valores fijos; ejecutarlo dos veces no duplica |
-| RF-30 | La conexión por defecto es `mysql`, se configura con variables de entorno y los tests corren contra una base de datos distinta de la de desarrollo |
 
-**Tests de arquitectura (Pest arch):** no hay controladores propios para el CRUD ni vistas Blade manuales (criterio 5).
+**Verificación manual (sin test):**
+
+| RF | Cómo se comprueba |
+|----|-------------------|
+| RF-01, RF-02 | Abrir `/admin` sin sesión y comprobar que redirige al login; comprobar que no hay registro |
+| RF-11, RF-15 | Editar, eliminar y revisar el orden del listado en el panel |
+| RF-16 | Ver importes y primas en EUR en el panel |
+| RF-17, RF-18, RF-20 | Subir un PDF, un JPG, un PNG y un formato inválido en el panel; comprobar el bucket |
+| RF-25 | Descargar un documento desde la vista del registro |
+| RF-27, RF-28, RF-29 | `php artisan migrate:fresh --seed` y comprobar roles, usuarios y registros con tinker |
+| RF-30 | `php artisan migrate:status` conecta a MySQL; los datos se guardan en MySQL |
 
 **Cierre de cada módulo:** `./vendor/bin/pest` en verde y `./vendor/bin/pint` sin cambios.
 
 ## Cobertura de la spec
 
-RF-01 a RF-04 → módulo 1. RF-05 a RF-07 → módulos 2, 3 y 4. RF-08 a RF-11 → módulo 2. RF-12 a RF-15 → módulo 3. RF-16 → módulos 0, 2 y 3. RF-17 a RF-26 → módulo 4. RF-27 a RF-29 → módulo 5. RF-30 → módulo 0. Ningún RF queda sin módulo ni sin test.
+RF-01 a RF-04 → módulo 1. RF-05 a RF-07 → módulos 2, 3 y 4. RF-08 a RF-11 → módulo 2. RF-12 a RF-15 → módulo 3. RF-16 → módulos 0, 2 y 3. RF-17 a RF-26 → módulo 4. RF-27 a RF-29 → módulo 5. RF-30 → módulo 0. Ningún RF queda sin módulo; los críticos tienen test.

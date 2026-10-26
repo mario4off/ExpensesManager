@@ -84,10 +84,10 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 
 ## Criterios de finalización
 
-1. Cada RF tiene al menos un test Pest escrito antes de implementar y verificado en rojo, y todos pasan.
+1. Los RF críticos (RF-03 a RF-10, RF-12 a RF-14, RF-19, RF-21 a RF-24, RF-26) tienen test Pest escrito antes de implementar y verificado en rojo, y todos pasan. El resto se verifica manualmente.
 2. S3 está mockeado en todos los tests; ninguno llama a AWS real.
 3. Un usuario nunca ve ni descarga datos de un área sin su permiso (RF-05, RF-06, RF-26 cubiertos por tests).
 4. Todos los mensajes al usuario están en español; las referencias de código, en inglés.
-5. Todo el CRUD usa recursos de Filament; sin controladores ni vistas Blade manuales.
+5. Todo el CRUD usa recursos de Filament; sin controladores ni vistas Blade manuales (se verifica revisando el código).
 6. `./vendor/bin/pest` en verde y `./vendor/bin/pint` sin cambios.
 7. Ninguna credencial en código ni commits.

@@ -42,7 +42,7 @@ Implementa solo la fase pedida. No adelantes fases posteriores.
 - Pregunta antes de cambiar el esquema de la base de datos o la estructura de las fases.
 
 ## Al terminar cualquier tarea
-- Escribe primero el test Pest y verifica que falla; implementa hasta que pase.
-- Ejecuta `./vendor/bin/pest` y confirma que pasa.
+- Si la tarea toca una función crítica (autorización, validaciones de negocio, documentos en S3), escribe primero el test Pest y verifica que falla; implementa hasta que pase. No crees tests de configuración ni de apariencia.
+- Ejecuta `./vendor/bin/pest` y confirma que pasa (si ya hay tests).
 - Ejecuta `./vendor/bin/pint`.
 - Mockea S3 y Bedrock en los tests: nunca llames a AWS real.
