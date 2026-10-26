@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\InsurancePolicies\Schemas;
 
+use App\Filament\Forms\Components\MoneyInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -31,10 +32,9 @@ class InsurancePolicyForm
                 DatePicker::make('ends_on')
                     ->label('Fecha de fin')
                     ->required(),
-                TextInput::make('premium')
+                MoneyInput::make('premium')
                     ->label('Prima')
-                    ->required()
-                    ->numeric(),
+                    ->required(),
             ]);
     }
 }
