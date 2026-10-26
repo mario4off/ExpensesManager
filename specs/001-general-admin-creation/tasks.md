@@ -67,8 +67,8 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que quien tiene `invoices` ve todas las facturas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
 - [x] **T17 — Crear el formulario de alta de factura.** Número, cliente, fecha de emisión e importe. Depende de: T16, T04. RF: RF-08, RF-16
   **Hecho cuando:** tests comprueban que se crea con los cuatro campos y que falta cualquiera o un número repetido da error; el importe se ve en EUR (comprobación manual).
-- [ ] **T18 — Validar el importe de la factura.** Depende de: T17. RF: RF-09
-  **Hecho cuando:** tests comprueban que 0, negativos y tres decimales se rechazan con mensaje en español y que 0,01 se acepta.
+- [ ] **T18 — Validar el importe de la factura con un `MoneyInput` compartido.** Componente que sustituye al `TextInput` numérico de T17: máscara de JavaScript (coma decimal, máx. 2 decimales), formato `1.234,50` al perder el foco, y conversión en servidor de `1.234,50` a `1234.50` antes de validar y guardar. Depende de: T17. RF: RF-09, RF-16
+  **Hecho cuando:** tests comprueban que 0, negativos y tres decimales se rechazan con mensaje en español, que 0,01 se acepta y que `1.234,50` se guarda como 1234.50; el formato al escribir y al perder el foco se comprueba a mano.
 - [ ] **T19 — Validar la fecha de emisión.** Depende de: T17. RF: RF-10
   **Hecho cuando:** tests con la hora fijada comprueban que mañana se rechaza y que hoy se acepta, también a las 23:59 y a las 00:01.
 - [ ] **T20 — Editar, eliminar y ordenar facturas.** Depende de: T17. RF: RF-11
@@ -82,8 +82,8 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
 - [ ] **T23 — Crear el formulario de alta de póliza.** Número, tomador, aseguradora, fecha de inicio, fecha de fin y prima. Depende de: T22, T04. RF: RF-12, RF-16
   **Hecho cuando:** tests comprueban que se crea con los seis campos y que falta cualquiera o un número repetido da error; la prima se ve en EUR (comprobación manual).
-- [ ] **T24 — Validar la prima.** Depende de: T23. RF: RF-13
-  **Hecho cuando:** tests comprueban que 0, negativas y tres decimales se rechazan con mensaje en español y que 0,01 se acepta.
+- [ ] **T24 — Validar la prima.** Reutiliza el `MoneyInput` de T18. Depende de: T23, T18. RF: RF-13, RF-16
+  **Hecho cuando:** tests comprueban que 0, negativas y tres decimales se rechazan con mensaje en español, que 0,01 se acepta y que `1.234,50` se guarda como 1234.50.
 - [ ] **T25 — Validar las fechas de la póliza.** Depende de: T23. RF: RF-14
   **Hecho cuando:** tests comprueban que una fecha de fin anterior a la de inicio se rechaza con mensaje en español y que una igual o posterior se acepta.
 - [ ] **T26 — Editar, eliminar y ordenar pólizas.** Depende de: T23. RF: RF-15
@@ -145,7 +145,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | RF-13 | T24 |
 | RF-14 | T25 |
 | RF-15 | T26 |
-| RF-16 | T04, T17, T23 |
+| RF-16 | T04, T17, T18, T23, T24 |
 | RF-17 | T28, T30, T31 |
 | RF-18, RF-19 | T06, T32 |
 | RF-20 | T05, T29, T30, T31 |

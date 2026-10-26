@@ -49,6 +49,7 @@ Claves de S3: `{area}/{uuid}.{ext}`, con el metadato `area` en el objeto (RF-21)
 | Un único `FileUpload` en el formulario de factura y de póliza | Cada registro tiene 0 o 1 documento (RF-17) | Repeater: innecesario con un solo documento |
 | Datos de ejemplo fijos (3 facturas y 3 pólizas) | Permiten comprobar después consultas con resultados conocidos (RF-29) | Factories aleatorias: los resultados cambiarían en cada carga |
 | Los tests usan una base de datos MySQL de pruebas, separada de la de desarrollo (RF-30) | Las garantías que importan, como la unicidad y los decimales exactos (RF-09, RF-13), dependen del motor y SQLite las trata distinto | SQLite en memoria: más rápido, pero un test en verde no probaría el comportamiento real en MySQL |
+| Campos de importe y prima con un componente compartido `MoneyInput`: máscara de JavaScript (coma decimal, máx. 2 decimales), formato `1.234,50` al perder el foco y conversión a decimal (`1234.50`) en servidor antes de validar | Un solo sitio para importe y prima (RF-09, RF-13, RF-16); la conversión en servidor evita corromper el dato | Input numérico nativo del navegador: formato según el idioma del navegador y sin control de decimales |
 | Importe y prima como decimal(10,2) | Las sumas SQL de la fase 2 salen directas y 2 decimales es lo que piden RF-09 y RF-13 | Entero en céntimos: obliga a convertir en cada formulario y en cada consulta del asistente |
 | Subida y guardado en una transacción, con compensación | Si algo falla, se revierte la base de datos y se borra de S3 el archivo ya subido en ese intento (RF-22) | Guardar primero y reparar después: deja registros sin archivo |
 | Borrado: archivo en S3 primero, registro después, dentro de una transacción | Si S3 falla se lanza la excepción, se revierte y el registro queda intacto (RF-24). Borrar una clave inexistente en S3 no da error | Borrar el registro y encolar la limpieza: contradice RF-24 y deja huérfanos |
@@ -90,10 +91,10 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-06 | Un registro o documento de un área sin permiso no es accesible por URL |
 | RF-07 | Con el permiso, el listado muestra todos los registros del área, sin importar quién los creó |
 | RF-08 | Faltan número, cliente, fecha o importe: errores; número repetido: error |
-| RF-09 | Importe 0, negativo o con 3 decimales: error en español; 0,01 válido |
+| RF-09 | Importe 0, negativo o con 3 decimales: error en español; 0,01 válido; `1.234,50` se guarda como 1234.50 |
 | RF-10 | Fecha de emisión de mañana: error; la de hoy se acepta, incluso cerca de medianoche |
 | RF-12 | Faltan número de póliza, tomador, aseguradora, fechas o prima: errores; número repetido: error |
-| RF-13 | Prima 0, negativa o con 3 decimales: error en español; 0,01 válida |
+| RF-13 | Prima 0, negativa o con 3 decimales: error en español; 0,01 válida; `1.234,50` se guarda como 1234.50 |
 | RF-14 | Fecha de fin anterior a la de inicio: error; igual o posterior: válida |
 | RF-19 | Con un archivo inválido no se crea el registro ni el documento |
 | RF-21 | El archivo se guarda con el metadato de área que corresponde a su registro |
@@ -108,7 +109,7 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 |----|-------------------|
 | RF-01, RF-02 | Abrir `/admin` sin sesión y comprobar que redirige al login; comprobar que no hay registro |
 | RF-11, RF-15 | Editar, eliminar y revisar el orden del listado en el panel |
-| RF-16 | Ver importes y primas en EUR en el panel |
+| RF-16 | Ver importes y primas en EUR en el panel; al escribir un importe, máx. 2 decimales con coma, y al perder el foco sale `1.234,50` |
 | RF-17, RF-18, RF-20 | Subir un PDF, un JPG, un PNG y un formato inválido en el panel; comprobar el bucket |
 | RF-25 | Descargar un documento desde la vista del registro |
 | RF-27, RF-28, RF-29 | `php artisan migrate:fresh --seed` y comprobar roles, usuarios y registros con tinker |

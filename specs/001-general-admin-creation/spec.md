@@ -45,7 +45,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 
 ### Común
 
-- **RF-16** El sistema expresará todos los importes y primas en EUR.
+- **RF-16** El sistema expresará todos los importes y primas en EUR. En los formularios se escriben con coma decimal y un máximo de 2 decimales, y al perder el foco se muestran con punto de millar y coma decimal (por ejemplo, 1.234,50).
 
 ### Documentos
 
