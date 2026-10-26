@@ -28,6 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandLogo(asset('images/etecnia-logo.webp'))
+            ->favicon(asset('images/etecnia-logo.webp'))
             ->colors([
                 'primary' => Color::Amber,
             ])

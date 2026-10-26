@@ -39,12 +39,14 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 1b — Ajuste al cambio de alcance (gestoría)
 
-- [ ] **T10a — Retirar las categorías.** Modelo, migración, factory, `CategorySeeder`, sus tests y su llamada en `DatabaseSeeder`. Depende de: T10r. RF: —
+- [x] **T10a — Retirar las categorías.** Modelo, migración, factory, `CategorySeeder`, sus tests y su llamada en `DatabaseSeeder`. Depende de: T10r. RF: —
   **Hecho cuando:** `git grep -i category` no encuentra referencias en `app/`, `database/` ni `tests/`, la suite está en verde y `php artisan migrate:fresh --seed` termina sin errores.
 - [ ] **T10b — Rehacer `RoleSeeder` con permisos de área.** Permisos `invoices` e `insurance_policies`; roles `admin` (ambos), `invoices` e `insurance_policies` (el suyo); desaparece el rol `user`. Depende de: T10a. RF: RF-27
   **Hecho cuando:** tests comprueban que existen los dos permisos y los tres roles con sus permisos, que no existe el rol `user` y que ejecutarlo dos veces no duplica.
 - [ ] **T10c — Sembrar los tres usuarios de prueba.** `facturas@etecnia.es` (rol `invoices`), `seguros@etecnia.es` (rol `insurance_policies`) y `admin@etecnia.es` (rol `admin`), contraseña `password`; la factory pasa a tener estados por rol. Depende de: T10b. RF: RF-28
   **Hecho cuando:** tests comprueban que los tres usuarios existen con su rol y contraseña válida, y que ejecutarlo dos veces no los duplica ni cambia su contraseña.
+- [x] **T10d — Poner el logo en el panel.** Copiar la imagen `.webp` del logo a `public/` y declararla en el `AdminPanelProvider` con `brandLogo` (y `favicon`); es configuración fija, sin acción ni pantalla en el panel. Depende de: T03. RF: —
+  **Hecho cuando:** el fichero existe en `public/images/` y la página de login del panel lo muestra (comprobación manual, sin test: es configuración fija).
 
 ## Fase 2 — Acceso y roles
 
