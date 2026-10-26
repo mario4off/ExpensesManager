@@ -25,7 +25,8 @@ class InsurancePoliciesTable
             ->recordActions([
                 ActionGroup::make([
                     EditAction::make(),
-                    DeleteAction::make(),
+                    DeleteAction::make()
+                        ->failureNotificationTitle('No se pudo borrar el documento de S3. El registro no se ha eliminado; inténtalo de nuevo.'),
                 ]),
             ]);
     }

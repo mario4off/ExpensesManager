@@ -105,9 +105,9 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** tests comprueban que un documento de formato o tamaño inválido no se almacena (ni archivo en `s3` ni registro de documento); que PDF y PNG y el límite de 10 MB se aceptan se comprueba manualmente.
 - [x] **T33 — Hacer atómica la subida.** Transacción y borrado compensatorio. Depende de: T30, T31. RF: RF-22
   **Hecho cuando:** un test con S3 caído al subir comprueba que no hay registro, ni documento, ni archivo huérfano, y que sale el mensaje en español.
-- [ ] **T34 — Borrar el archivo al quitar el documento o eliminar el registro.** Eventos `deleting` en `Invoice` e `InsurancePolicy` (trait compartido). Depende de: T30, T31. RF: RF-23
+- [x] **T34 — Borrar el archivo al quitar el documento o eliminar el registro.** Eventos `deleting` en `Invoice` e `InsurancePolicy` (trait compartido). Depende de: T30, T31. RF: RF-23
   **Hecho cuando:** tests comprueban que quitar el documento, eliminar el registro y el borrado masivo eliminan el archivo del disco `s3` simulado.
-- [ ] **T35 — Conservar el registro si falla el borrado en S3.** Depende de: T34. RF: RF-24
+- [x] **T35 — Conservar el registro si falla el borrado en S3.** Depende de: T34. RF: RF-24
   **Hecho cuando:** un test con S3 caído al borrar comprueba que el registro sigue, que el archivo no se toca y que sale el mensaje en español.
 - [ ] **T36 — Añadir la vista del registro con descarga del documento.** Acción de Filament con streaming desde `s3`. Depende de: T30, T31. RF: RF-25
   **Hecho cuando:** en el panel, quien tiene el permiso del área descarga el documento y un archivo ausente muestra un error en español (comprobación manual).
