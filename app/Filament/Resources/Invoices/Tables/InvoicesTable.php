@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Invoices\Tables;
 
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -17,8 +19,12 @@ class InvoicesTable
                 TextColumn::make('issued_on')->label('Fecha de emisión')->date(),
                 TextColumn::make('amount')->label('Importe')->money('EUR'),
             ])
+            ->defaultSort('issued_on', 'desc')
             ->recordActions([
-                EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ]);
     }
 }

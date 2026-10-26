@@ -71,14 +71,14 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
   **Hecho cuando:** el formulario de factura usa `MoneyInput` y el navegador solo permite 2 decimales en el importe (comprobación manual, sin test).
 - [x] **T19 — Validar la fecha de emisión.** Depende de: T17. RF: RF-10
   **Hecho cuando:** tests con la hora fijada comprueban que mañana se rechaza y que hoy se acepta, también a las 23:59 y a las 00:01.
-- [ ] **T20 — Editar, eliminar y ordenar facturas.** Depende de: T17. RF: RF-11
+- [x] **T20 — Editar, eliminar y ordenar facturas.** Depende de: T17. RF: RF-11
   **Hecho cuando:** editar, eliminar y revisar el orden por fecha de emisión descendente en el panel (comprobación manual).
 
 ## Fase 4 — Seguros
 
 - [ ] **T21 — Crear modelo, migración y factory de `insurance_policies`.** `policy_number` único. Depende de: T10c. RF: RF-12 (base)
   **Hecho cuando:** la migración crea `insurance_policies` con `policy_number` único y `premium` decimal(10,2) (`php artisan migrate:fresh --seed` sin errores).
-- [ ] **T22 — Crear `InsurancePolicyResource` con autorización por permiso.** `InsurancePolicyPolicy` y navegación por el permiso `insurance_policies`; listado. Depende de: T21, T11. RF: RF-05, RF-06, RF-07
+- [ ] **T22 — Crear `InsurancePolicyResource` con autorización por permiso.** `InsurancePolicyPolicy` y navegación por el permiso `insurance_policies`; listado, con las acciones del registro agrupadas en `ActionGroup`. Depende de: T21, T11. RF: RF-05, RF-06, RF-07
   **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
 - [ ] **T23 — Crear el formulario de alta de póliza.** Número, tomador, aseguradora, fecha de inicio, fecha de fin y prima. Depende de: T22, T04. RF: RF-12, RF-16
   **Hecho cuando:** tests comprueban que se crea con los seis campos y que falta cualquiera o un número repetido da error; la prima se ve en EUR (comprobación manual).
