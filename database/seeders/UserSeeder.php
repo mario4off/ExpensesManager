@@ -6,26 +6,36 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class AdminUserSeeder extends Seeder
+class UserSeeder extends Seeder
 {
+    /**
+     * The development users and their roles (RF-28).
+     *
+     * @var array<string, array{name: string, role: string}>
+     */
+    private const USERS = [
+        'facturas@etecnia.es' => ['name' => 'Facturas', 'role' => 'invoices'],
+        'seguros@etecnia.es' => ['name' => 'Seguros', 'role' => 'insurance_policies'],
+        'admin@etecnia.es' => ['name' => 'Administrador', 'role' => 'admin'],
+    ];
+
     /**
      * Run the database seeds.
      *
-     * Creates the initial development administrator (RF-25). These credentials
-     * are for local development only and must be changed outside local.
+     * These credentials are for local development only and must be changed
+     * outside local. Existing users keep their password.
      *
-     * Assumes the `admin` role already exists (see RoleSeeder, which must run first).
+     * Assumes the roles already exist (see RoleSeeder, which must run first).
      */
     public function run(): void
     {
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@etecnia.es'],
-            [
-                'name' => 'Administrador',
-                'password' => Hash::make('password'),
-            ],
-        );
+        foreach (self::USERS as $email => $data) {
+            $user = User::firstOrCreate(
+                ['email' => $email],
+                ['name' => $data['name'], 'password' => Hash::make('password')],
+            );
 
-        $admin->assignRole('admin');
+            $user->assignRole($data['role']);
+        }
     }
 }

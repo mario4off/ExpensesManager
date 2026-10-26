@@ -52,4 +52,24 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(fn (User $user) => $user->assignRole('admin'));
     }
+
+    /**
+     * Indicate that the user has the `invoices` role.
+     *
+     * Assumes the role already exists (see RoleSeeder).
+     */
+    public function invoices(): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->assignRole('invoices'));
+    }
+
+    /**
+     * Indicate that the user has the `insurance_policies` role.
+     *
+     * Assumes the role already exists (see RoleSeeder).
+     */
+    public function insurancePolicies(): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->assignRole('insurance_policies'));
+    }
 }
