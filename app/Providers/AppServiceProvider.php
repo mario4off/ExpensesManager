@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Chat\ChatModel;
+use App\Services\Chat\OllamaChatModel;
 use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Ollama is the provisional chat provider; swap this binding to change it.
+        $this->app->bind(ChatModel::class, OllamaChatModel::class);
     }
 
     /**

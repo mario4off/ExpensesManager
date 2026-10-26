@@ -11,9 +11,9 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 ## Fase 1 — Base
 
-- [ ] **T02 — Añadir la configuración.** `ollama.url`, `ollama.model` y `ollama.timeout` en `config/services.php`; `history_limit` y el prompt de sistema en español en `config/assistant.php`; las variables en `.env.example` sin secretos. Depende de: T01. RF: RF-04, RF-10, RF-11
+- [x] **T02 — Añadir la configuración.** `ollama.url`, `ollama.model` y `ollama.timeout` en `config/services.php`; `history_limit` y el prompt de sistema en español en `config/assistant.php`; las variables en `.env.example` sin secretos. Depende de: T01. RF: RF-04, RF-10, RF-11
   **Hecho cuando:** `php artisan tinker --execute="dump(config('assistant'), config('services.ollama'))"` muestra los valores por defecto (`qwen3:8b`, 60 s, 10 mensajes).
-- [ ] **T03 — Crear la interfaz `ChatModel` y `OllamaChatModel`.** `ChatModel::reply(array $messages): string`. `OllamaChatModel` llama con `Http` a `/api/chat` (`stream: false`, `think: false`), quita cualquier bloque `<think>` y lanza una excepción propia si Ollama falla o agota el tiempo. Se registra en el contenedor. Depende de: T02. RF: RF-03, RF-09, RF-10, RF-13
+- [x] **T03 — Crear la interfaz `ChatModel` y `OllamaChatModel`.** `ChatModel::reply(array $messages): string`. `OllamaChatModel` llama con `Http` a `/api/chat` (`stream: false`, `think: false`), quita cualquier bloque `<think>` y lanza una excepción propia si Ollama falla o agota el tiempo. Se registra en el contenedor. Depende de: T02. RF: RF-03, RF-09, RF-10, RF-13
   **Hecho cuando:** con Ollama en marcha, `php artisan tinker` devuelve una respuesta en español; con Ollama apagado lanza la excepción propia.
 
 ## Fase 2 — Componente
