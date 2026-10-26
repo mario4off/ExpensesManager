@@ -19,7 +19,7 @@ function validPolicy(array $overrides = []): array
         'insurer' => 'Mapfre',
         'starts_on' => '2026-01-01',
         'ends_on' => '2026-12-31',
-        'premium' => '350,75',
+        'premium' => '350.75',
     ], $overrides);
 }
 

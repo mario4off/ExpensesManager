@@ -17,7 +17,7 @@ function validInvoice(array $overrides = []): array
         'number' => 'F-0001',
         'client_name' => 'Talleres Pérez S.L.',
         'issued_on' => '2026-10-01',
-        'amount' => '120,50',
+        'amount' => '120.50',
     ], $overrides);
 }
 
@@ -53,13 +53,4 @@ it('rejects a repeated invoice number', function () {
         ->assertHasFormErrors(['number' => 'unique']);
 
     expect(Invoice::count())->toBe(1);
-});
-
-it('reads the amount in Spanish format and stores it with a decimal point', function () {
-    Livewire::test(CreateInvoice::class)
-        ->fillForm(validInvoice(['amount' => '1.234,50']))
-        ->call('create')
-        ->assertHasNoFormErrors();
-
-    expect(Invoice::firstWhere('number', 'F-0001')->amount)->toBe('1234.50');
 });

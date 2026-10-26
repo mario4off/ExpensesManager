@@ -19,7 +19,7 @@ function createInvoiceIssuedOn(string $date)
             'number' => 'F-0001',
             'client_name' => 'Talleres Pérez S.L.',
             'issued_on' => $date,
-            'amount' => '120,50',
+            'amount' => '120.50',
         ])
         ->call('create');
 }

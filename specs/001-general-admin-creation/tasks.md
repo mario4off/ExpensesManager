@@ -28,13 +28,13 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 - [x] **T06b — Configurar MySQL para desarrollo y pruebas.** Conexión `mysql` solo por `.env`, base de datos de pruebas aparte, y retirar el SQLite heredado de T01. Depende de: T02. RF: RF-30
   **Hecho cuando:** `php artisan migrate:status` conecta a MySQL, `phpunit.xml` usa una base de datos distinta de la de desarrollo, `.env.example` trae las variables `DB_*` sin credenciales reales y no queda `database/database.sqlite`.
-- [x] **T07r — Instalar `spatie/laravel-permission` y revertir `users.is_admin`.** `User` usa `HasRoles`; `RoleSeeder`; factory `admin()`. Depende de: T06b. RF: RF-03 (base)
+- [x] **T07r — Instalar `spatie/laravel-permission`.** `User` usa `HasRoles`; `RoleSeeder`; factory `admin()`. Depende de: T06b. RF: RF-03 (base)
   **Hecho cuando:** `User` usa `HasRoles` y `php artisan migrate:fresh --seed` termina sin errores. (Hecha; los roles `admin` y `user` quedan superados por T10b.)
-- [x] **T08r — `AdminUserSeeder` asigna el rol en vez de `is_admin`.** Depende de: T07r. RF: RF-28 (base)
+- [x] **T08r — `UserSeeder` crea el usuario admin con el rol `admin`.** Depende de: T07r. RF: RF-28 (base)
   **Hecho cuando:** `php artisan migrate:fresh --seed` crea `admin@etecnia.es` con el rol `admin`. (Hecha; se amplía en T10c.)
 - [x] **T09 — Crear modelo, migración y factory de `categories`.** Depende de: T06b. RF: —
   **Hecho cuando:** `php artisan migrate:fresh --seed` termina sin errores. (Hecha; superada por el cambio de alcance, se retiró en T10a.)
-- [x] **T10r — `DatabaseSeeder` con `RoleSeeder`, `AdminUserSeeder` y `CategorySeeder`.** Depende de: T07r, T08r, T09. RF: —
+- [x] **T10r — `DatabaseSeeder` con `RoleSeeder`, `UserSeeder` y `CategorySeeder`.** Depende de: T07r, T08r, T09. RF: —
   **Hecho cuando:** `php artisan migrate:fresh --seed` termina sin errores. (Hecha; `CategorySeeder` se retira en T10a.)
 
 ## Fase 1b — Ajuste al cambio de alcance (gestoría)
@@ -89,7 +89,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 - [x] **T26 — Editar, eliminar y ordenar pólizas.** Acciones del registro agrupadas en `ActionGroup`. Depende de: T23. RF: RF-15
   **Hecho cuando:** editar, eliminar y revisar el orden por fecha de inicio descendente en el panel (comprobación manual).
 - [x] **T27 — Verificar que un usuario con varios roles accede a ambas áreas.** Depende de: T10c, T16, T22. RF: RF-04
-  **Hecho cuando:** un test comprueba que un usuario con los roles `invoices` e `insurance_policies` ve y accede a facturas y a pólizas, y que uno con solo `invoices` no accede a las pólizas.
+  **Hecho cuando:** un test comprueba que un usuario con los roles `invoices` e `insurance_policies` ve y accede a facturas y a pólizas, y que uno con solo `invoices` no accede a las pólizas (esta última parte la cubre `InsurancePolicyAccessTest`).
 
 ## Fase 5 — Documentos
 
