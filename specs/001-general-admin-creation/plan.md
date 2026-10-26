@@ -44,7 +44,7 @@ Claves de S3: `{area}/{uuid}.{ext}`, con el metadato `area` en el objeto (RF-21)
 | Roles con `spatie/laravel-permission` | Decisión explícita del usuario; permite roles por área y que un usuario tenga varios (RF-04) | La columna `users.is_admin`: más simple, pero no admite roles por área ni varios roles |
 | Autorizar las áreas por **permiso** (`can('invoices')`), no por nombre de rol | Un usuario con varios roles obtiene la unión de sus permisos sin lógica extra (RF-04) | Comprobar nombres de rol: habría que combinar roles a mano en cada policy |
 | Gestión de usuarios solo para el rol `admin`; al crear un usuario se le asignan o quitan roles con un selector; los roles y sus permisos son fijos (los carga `RoleSeeder`) | Es lo mínimo para RF-03 y RF-04 | `RoleResource` o relation manager de roles para editar permisos: más superficie de la necesaria para un PoC. Crear o borrar roles desde el panel: fuera de alcance |
-| Visibilidad por área en policies (`viewAny`, `view`) y navegación oculta sin permiso; Filament devuelve 404 si la policy niega el registro (RF-06) | Modelo de gestoría: el área es la unidad de acceso (RF-05 a RF-07) | Aislamiento por `user_id`: contradice que quien tiene el área vea todos sus registros |
+| Visibilidad por área en policies (`viewAny`, `view`) y navegación oculta sin permiso; Filament deniega el acceso por URL si la policy lo niega (RF-06) | Modelo de gestoría: el área es la unidad de acceso (RF-05 a RF-07) | Aislamiento por `user_id`: contradice que quien tiene el área vea todos sus registros |
 | `documents` con `area`, y `document_id` único y con clave foránea en `invoices` e `insurance_policies` | Una sola lógica de subida, borrado y descarga; el `unique` garantiza 0 o 1 documento y la clave foránea da integridad real; el área queda en base de datos y en S3 | Relación polimórfica (`documentable_type` y `documentable_id`): sin clave foránea y con columnas redundantes. Columnas de documento en cada tabla: duplica la lógica |
 | Un único `FileUpload` en el formulario de factura y de póliza | Cada registro tiene 0 o 1 documento (RF-17) | Repeater: innecesario con un solo documento |
 | Datos de ejemplo fijos (3 facturas y 3 pólizas) | Permiten comprobar después consultas con resultados conocidos (RF-29) | Factories aleatorias: los resultados cambiarían en cada carga |
@@ -87,7 +87,7 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-03 | Un usuario sin rol `admin` no ve el recurso de usuarios ni accede por URL |
 | RF-04 | Un usuario con los roles `invoices` e `insurance_policies` ve y accede a las dos áreas |
 | RF-05 | El usuario de facturas no ve el recurso de seguros en la navegación, y al revés |
-| RF-06 | Ver, editar y borrar un registro de un área sin permiso devuelve 404; igual con su documento |
+| RF-06 | Un registro o documento de un área sin permiso no es accesible por URL |
 | RF-07 | Con el permiso, el listado muestra todos los registros del área, sin importar quién los creó |
 | RF-08 | Faltan número, cliente, fecha o importe: errores; número repetido: error |
 | RF-09 | Importe 0, negativo o con 3 decimales: error en español; 0,01 válido |
@@ -100,7 +100,7 @@ Pest, con `RefreshDatabase`. Livewire testing sobre las páginas de Filament. Te
 | RF-22 | Con S3 caído al subir: no hay registro, ni documento, ni archivo huérfano, y sale el mensaje |
 | RF-23 | Quitar el documento y borrar el registro eliminan su archivo del disco `s3` simulado |
 | RF-24 | Con S3 caído al borrar: el registro sigue, el mensaje sale y el archivo no se toca |
-| RF-26 | Un usuario sin el permiso del área recibe 404 al intentar descargar |
+| RF-26 | Un usuario sin el permiso del área no puede descargar |
 
 **Verificación manual (sin test):**
 

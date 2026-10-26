@@ -63,8 +63,8 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 
 - [x] **T15 — Crear modelo, migración y factory de `invoices`.** `number` único. Depende de: T10c. RF: RF-08 (base)
   **Hecho cuando:** la migración crea `invoices` con `number` único y `amount` decimal(10,2) (`php artisan migrate:fresh --seed` sin errores).
-- [ ] **T16 — Crear `InvoiceResource` con autorización por permiso.** `InvoicePolicy` y navegación por el permiso `invoices`; listado. Depende de: T15, T11. RF: RF-05, RF-06, RF-07
-  **Hecho cuando:** tests comprueban que quien tiene `invoices` ve todas las facturas, que quien no lo tiene no ve el recurso y recibe 404 al ver, editar o borrar una por URL.
+- [x] **T16 — Crear `InvoiceResource` con autorización por permiso.** `InvoicePolicy` y navegación por el permiso `invoices`; listado. Depende de: T15, T11. RF: RF-05, RF-06, RF-07
+  **Hecho cuando:** tests comprueban que quien tiene `invoices` ve todas las facturas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
 - [ ] **T17 — Crear el formulario de alta de factura.** Número, cliente, fecha de emisión e importe. Depende de: T16, T04. RF: RF-08, RF-16
   **Hecho cuando:** tests comprueban que se crea con los cuatro campos y que falta cualquiera o un número repetido da error; el importe se ve en EUR (comprobación manual).
 - [ ] **T18 — Validar el importe de la factura.** Depende de: T17. RF: RF-09
@@ -79,7 +79,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 - [ ] **T21 — Crear modelo, migración y factory de `insurance_policies`.** `policy_number` único. Depende de: T10c. RF: RF-12 (base)
   **Hecho cuando:** la migración crea `insurance_policies` con `policy_number` único y `premium` decimal(10,2) (`php artisan migrate:fresh --seed` sin errores).
 - [ ] **T22 — Crear `InsurancePolicyResource` con autorización por permiso.** `InsurancePolicyPolicy` y navegación por el permiso `insurance_policies`; listado. Depende de: T21, T11. RF: RF-05, RF-06, RF-07
-  **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso y recibe 404 al ver, editar o borrar una por URL.
+  **Hecho cuando:** tests comprueban que quien tiene `insurance_policies` ve todas las pólizas, que quien no lo tiene no ve el recurso ni accede a sus registros por URL.
 - [ ] **T23 — Crear el formulario de alta de póliza.** Número, tomador, aseguradora, fecha de inicio, fecha de fin y prima. Depende de: T22, T04. RF: RF-12, RF-16
   **Hecho cuando:** tests comprueban que se crea con los seis campos y que falta cualquiera o un número repetido da error; la prima se ve en EUR (comprobación manual).
 - [ ] **T24 — Validar la prima.** Depende de: T23. RF: RF-13
@@ -112,7 +112,7 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 - [ ] **T36 — Añadir la vista del registro con descarga del documento.** Acción de Filament con streaming desde `s3`. Depende de: T30, T31. RF: RF-25
   **Hecho cuando:** en el panel, quien tiene el permiso del área descarga el documento y un archivo ausente muestra un error en español (comprobación manual).
 - [ ] **T37 — Denegar el acceso a documentos de un área sin permiso.** Con las policies del registro y de `Document` (por `area`). Depende de: T36. RF: RF-06, RF-26
-  **Hecho cuando:** tests comprueban que un usuario sin el permiso del área recibe 404 al ver o descargar un documento.
+  **Hecho cuando:** tests comprueban que un usuario sin el permiso del área no puede ver ni descargar un documento.
 
 ## Fase 6 — Datos de ejemplo
 

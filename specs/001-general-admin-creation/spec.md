@@ -26,7 +26,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 ### Autorización por área
 
 - **RF-05** Mientras un usuario no tenga el permiso de un área, el sistema no le mostrará los recursos de esa área en el panel.
-- **RF-06** Si un usuario intenta acceder a un registro o documento de un área sin tener su permiso, el sistema responderá como si no existiera (404).
+- **RF-06** Si un usuario intenta acceder a un registro o documento de un área sin tener su permiso, el sistema se lo denegará.
 - **RF-07** Mientras un usuario tenga el permiso de un área, el sistema le mostrará todos los registros de esa área.
 
 ### Facturas
@@ -58,7 +58,7 @@ Simular una gestoría ficticia con dos áreas, **Facturas** y **Seguros**, para 
 - **RF-23** Cuando se quite el documento de un registro o se elimine el registro, el sistema borrará también el archivo de S3.
 - **RF-24** Si falla el borrado en S3, el sistema informará del error en español y no eliminará el registro, para no dejar archivos huérfanos ni registros sin archivo.
 - **RF-25** Cuando un usuario con el permiso del área solicite la descarga de un documento, el sistema se la servirá usando las credenciales del `.env`, con el bucket privado.
-- **RF-26** Si quien solicita la descarga no tiene el permiso del área, el sistema la denegará como si el documento no existiera.
+- **RF-26** Si quien solicita la descarga no tiene el permiso del área, el sistema la denegará.
 
 ### Datos iniciales
 
