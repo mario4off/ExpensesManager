@@ -6,8 +6,7 @@ use Illuminate\Contracts\View\View;
 
 /**
  * The assistant as a slide-over sidebar available on every panel page. It
- * inherits all the logic and the session history from Assistant, so the page
- * and the sidebar show the same conversation; only the view changes.
+ * inherits all the logic and the session history from Assistant.
  */
 class AssistantSidebar extends Assistant
 {

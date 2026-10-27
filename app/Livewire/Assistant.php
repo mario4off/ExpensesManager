@@ -4,10 +4,9 @@ namespace App\Livewire;
 
 use App\Services\Chat\ChatModel;
 use App\Services\Chat\ChatModelUnavailableException;
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class Assistant extends Component
+abstract class Assistant extends Component
 {
     private const SESSION_KEY = 'assistant.messages';
 
@@ -67,11 +66,6 @@ class Assistant extends Component
     public function messages(): array
     {
         return session(self::SESSION_KEY, []);
-    }
-
-    public function render(): View
-    {
-        return view('livewire.assistant', ['messages' => $this->messages()]);
     }
 
     /**
