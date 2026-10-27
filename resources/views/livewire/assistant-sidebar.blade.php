@@ -1,45 +1,6 @@
 <div
     wire:ignore.self
-    x-data="{
-        open: false,
-        draft: '',
-        pendingMessage: '',
-        busy: false,
-        init() {
-            try { this.open = sessionStorage.getItem('assistant-sidebar-open') === '1'; } catch (e) {}
-            this.$watch('open', (value) => {
-                try { sessionStorage.setItem('assistant-sidebar-open', value ? '1' : '0'); } catch (e) {}
-                if (value) this.$nextTick(() => { this.scrollToBottom(); this.$refs.input?.focus(); });
-            });
-            if (this.open) this.$nextTick(() => this.scrollToBottom());
-        },
-        scrollToBottom() {
-            this.$refs.history.scrollTop = this.$refs.history.scrollHeight;
-        },
-        async submitMessage() {
-            if (this.busy || !this.draft.trim()) return;
-
-            this.pendingMessage = this.draft.trim();
-            this.draft = '';
-            this.busy = true;
-            this.$nextTick(() => this.scrollToBottom());
-
-            try {
-                $wire.$set('message', this.pendingMessage, false);
-                await $wire.send();
-                if ($wire.error) {
-                    if (!this.draft) this.draft = this.pendingMessage;
-                } else {
-                    this.pendingMessage = '';
-                }
-            } catch (error) {
-                if (!this.draft) this.draft = this.pendingMessage;
-            } finally {
-                this.busy = false;
-                this.$nextTick(() => this.scrollToBottom());
-            }
-        },
-    }"
+    x-data="assistantSidebar"
     x-on:toggle-assistant.window="open = !open"
     x-on:keydown.escape.window="open = false"
     x-show="open"
@@ -77,7 +38,7 @@
             @endforelse
 
             <div x-cloak x-show="pendingMessage" x-text="pendingMessage" style="align-self: flex-end; max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; white-space: pre-wrap; background: color-mix(in oklab, var(--primary-500) 15%, transparent);"></div>
-            <p x-cloak x-show="busy" role="status" style="opacity: 0.6;">Pensando…</p>
+            <p x-cloak x-show="busy" role="status" style="opacity: 0.6; font-size: 0.9rem;">Pensando…</p>
 
             @if ($error)
                 <div style="align-self: flex-start; max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; color: var(--danger-600); background: color-mix(in oklab, var(--danger-500) 12%, transparent);">{{ $error }}</div>

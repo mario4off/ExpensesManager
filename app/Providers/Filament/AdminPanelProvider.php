@@ -45,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             // The assistant sidebar: a toggle button in the topbar and the panel at the end of the body.
             ->renderHook(
                 PanelsRenderHook::USER_MENU_BEFORE,
-                fn(): string => Blade::render(<<<'BLADE'
+                fn (): string => Blade::render(<<<'BLADE'
                     <x-filament::icon-button
                         icon="heroicon-o-sparkles"
                         color="gray"
@@ -57,9 +57,13 @@ class AdminPanelProvider extends PanelProvider
                     BLADE),
             )
             ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => auth()->check() ? Blade::render('<x-assistant-sidebar-state />') : '',
+            )
+            ->renderHook(
                 PanelsRenderHook::BODY_END,
                 // BODY_END is also rendered on the login page, where there is no one to chat with.
-                fn(): string => auth()->check() ? Blade::render('<livewire:assistant-sidebar />') : '',
+                fn (): string => auth()->check() ? Blade::render('<livewire:assistant-sidebar />') : '',
             )
             // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             // ->widgets([
