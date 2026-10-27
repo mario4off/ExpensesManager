@@ -6,7 +6,8 @@ Fase 1 del chatbot (ver `AGENTS.md`): una interfaz de chat dentro del panel, con
 
 ## Decisiones cerradas
 
-- El asistente es un componente Livewire propio, no un widget de Filament. Se muestra en una página de Filament llamada "Asistente", la última del menú, para no alterar el punto de entrada de cada usuario.
+- El asistente es un componente Livewire propio, no un widget de Filament. Se muestra en una barra lateral deslizante a la derecha, integrada en todas las páginas del panel, que se abre y se cierra con un botón de la barra superior.
+- La página de Filament "Asistente" (la última del menú, para no alterar el punto de entrada) se mantiene tal como está y comparte la misma conversación que la barra lateral.
 - Puede usarlo cualquier usuario autenticado del panel; no hay permiso nuevo.
 - Modelo de chat: Ollama local, detrás de una interfaz propia (`ChatModel`) para poder cambiar de proveedor sin tocar el componente. Bedrock se mantiene para el RAG de la fase 3.
 - Cliente: el facade `Http` de Laravel contra `/api/chat` de Ollama. Sin dependencias nuevas.
@@ -18,9 +19,9 @@ Fase 1 del chatbot (ver `AGENTS.md`): una interfaz de chat dentro del panel, con
 
 ## Requisitos funcionales (EARS)
 
-### Acceso y página
+### Acceso y barra lateral
 
-- **RF-01** Cuando un usuario autenticado abra la sección Asistente del panel, el sistema le mostrará la conversación actual y un campo para escribir.
+- **RF-01** Cuando un usuario autenticado pulse el botón del asistente en la barra superior de cualquier página del panel, el sistema abrirá una barra lateral a la derecha con la conversación actual y un campo para escribir; cuando lo pulse de nuevo o cierre la barra, el sistema la ocultará.
 - **RF-02** Mientras un usuario esté autenticado, el sistema le permitirá usar el asistente sin exigirle ningún permiso de área.
 
 ### Conversación
@@ -42,6 +43,7 @@ Fase 1 del chatbot (ver `AGENTS.md`): una interfaz de chat dentro del panel, con
 - **RF-11** El sistema indicará al modelo, con un prompt de sistema en español, que es el asistente de la gestoría, que responde siempre en español y que en esta fase no tiene acceso a facturas, pólizas ni documentos.
 - **RF-12** El sistema mostrará las respuestas del modelo como Markdown sin HTML y los mensajes del usuario como texto plano.
 - **RF-13** El sistema no mostrará el razonamiento interno del modelo (bloques `<think>`).
+- **RF-14** El sistema mostrará la misma conversación en la barra lateral y en la página Asistente, porque ambas usan el mismo historial de la sesión.
 
 ## Fuera de alcance
 
@@ -54,7 +56,7 @@ Fase 1 del chatbot (ver `AGENTS.md`): una interfaz de chat dentro del panel, con
 
 ## Criterios de finalización
 
-1. Con Ollama instalado, el usuario conversa en el panel y comprueba a mano RF-01 a RF-13.
+1. Con Ollama instalado, el usuario conversa en el panel y comprueba a mano RF-01 a RF-14.
 2. Sin dependencias nuevas ni cambios de esquema de base de datos.
 3. Todos los mensajes al usuario están en español; las referencias de código, en inglés.
 4. La URL, el modelo y el tiempo máximo de espera salen solo del `.env`; ningún secreto en código ni commits.

@@ -28,16 +28,22 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 - [x] **T06 — Añadir la página de Filament "Asistente".** Monta el componente `Assistant`, es la última del menú y no exige permiso de área. Depende de: T05. RF: RF-01, RF-02
   **Hecho cuando:** en el panel, un usuario de cada rol ve "Asistente" al final del menú, lo abre y conversa; el punto de entrada de cada rol no cambia.
 
+## Fase 4 — Barra lateral
+
+- [x] **T08 — Añadir la barra lateral del asistente.** Componente `AssistantSidebar` que hereda de `Assistant` (misma lógica y misma conversación en sesión) con su vista deslizante a la derecha; botón en la barra superior (render hook `USER_MENU_BEFORE`) y barra al final del `body` (render hook `BODY_END`, solo con usuario autenticado). Depende de: T05. RF: RF-01, RF-14
+  **Hecho cuando:** en cualquier página del panel el botón de la barra superior abre y cierra la barra; se conversa en ella; lo dicho aparece también en la página Asistente; en el login no aparece.
+
 ## Cierre
 
-- [ ] **T07 — Verificación final.** Depende de: T06. RF: RF-01 a RF-13
-  **Hecho cuando:** el usuario recorre RF-01 a RF-13 en el panel con Ollama real, `./vendor/bin/pint` no cambia nada y `./vendor/bin/pest` está en verde.
+- [ ] **T07 — Verificación final.** Depende de: T06, T08. RF: RF-01 a RF-14
+  **Hecho cuando:** el usuario recorre RF-01 a RF-14 en el panel con Ollama real, `./vendor/bin/pint` no cambia nada y `./vendor/bin/pest` está en verde.
 
 ## Cobertura de RF
 
 | RF | Tareas |
 |----|--------|
-| RF-01, RF-02 | T06 |
+| RF-01 | T06, T08 |
+| RF-02 | T06 |
 | RF-03 | T03, T04 |
 | RF-04 | T02, T04 |
 | RF-05, RF-06 | T04 |
@@ -48,3 +54,4 @@ Divide `plan.md` en tareas de menos de 30 minutos, ordenadas por dependencia. Ca
 | RF-11 | T02 |
 | RF-12 | T05 |
 | RF-13 | T03 |
+| RF-14 | T08 |

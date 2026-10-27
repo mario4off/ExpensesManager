@@ -1,6 +1,6 @@
 # Plan 002 — Interfaz del asistente (chat con Ollama)
 
-Implementa `spec.md` (RF-01 a RF-13). Respeta `docs/constitution.md`, con las enmiendas del primer punto.
+Implementa `spec.md` (RF-01 a RF-14). Respeta `docs/constitution.md`, con las enmiendas del primer punto.
 
 ## Puntos que requieren aprobación (reglas 1, 4 y 12)
 
@@ -19,6 +19,7 @@ Implementa `spec.md` (RF-01 a RF-13). Respeta `docs/constitution.md`, con las en
 | 3 | Componente | `Assistant` Livewire: historial en sesión, envío, validación, errores, "Nueva conversación" | RF-03 a RF-09 |
 | 4 | Vista | Blade del componente con componentes de Filament; Markdown seguro; estado de espera | RF-08, RF-12 |
 | 5 | Página | Página de Filament "Asistente", última del menú | RF-01, RF-02 |
+| 6 | Barra lateral | `AssistantSidebar` (hereda de `Assistant`) y su vista deslizante; render hooks del panel para el botón de la barra superior y la barra al final del `body` | RF-01, RF-14 |
 
 ## Datos
 
@@ -43,6 +44,8 @@ El prompt de sistema no se guarda: se antepone en cada envío.
 | `Str::markdown()` con `html_input => 'strip'` | Qwen responde en Markdown; el HTML del modelo no debe llegar al navegador | Texto plano: pierde listas y negritas. HTML sin filtrar: inyección |
 | Página de Filament que monta el componente | Login, layout y navegación sin controladores (reglas 2 y AGENTS.md) | Ruta propia fuera del panel: duplica autenticación |
 | "Asistente" al final del menú | No cambia el punto de entrada (regla 15) | Primero del menú: se convertiría en la entrada de todos |
+| Barra lateral con render hooks de Filament (`USER_MENU_BEFORE` y `BODY_END`) | Aparece en todas las páginas del panel sin tocarlas ni el layout | Solo una página o un widget: obliga a salir de lo que se está haciendo |
+| `AssistantSidebar` hereda de `Assistant` | Misma lógica y misma clave de sesión sin duplicar código ni tocar el componente existente | Copiar la clase: dos lógicas que se desincronizan |
 
 ## Riesgos conocidos
 
@@ -66,7 +69,8 @@ Sin tests automatizados en esta fase (decisión del usuario). Cada tarea se cier
 
 | RF | Módulos |
 |----|---------|
-| RF-01, RF-02 | 5 |
+| RF-01 | 5, 6 |
+| RF-02 | 5 |
 | RF-03 | 2, 3 |
 | RF-04 | 1, 3 |
 | RF-05, RF-06 | 3 |
@@ -77,3 +81,4 @@ Sin tests automatizados en esta fase (decisión del usuario). Cada tarea se cier
 | RF-11 | 1 |
 | RF-12 | 4 |
 | RF-13 | 2 |
+| RF-14 | 6 |
