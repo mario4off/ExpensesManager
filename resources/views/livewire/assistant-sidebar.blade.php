@@ -66,7 +66,7 @@
         <div style="display: flex; flex-direction: column; gap: 0.75rem; overflow-wrap: anywhere;">
             @forelse ($messages as $item)
                 @if ($item['role'] === 'user')
-                    <div style="align-self: flex-end; max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; white-space: pre-wrap; background: color-mix(in oklab, var(--primary-500) 15%, transparent);">{{ $item['content'] }}</div>
+                    <div style="align-self: flex-end; font-size: 0.9rem; max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; white-space: pre-wrap; background: color-mix(in oklab, var(--primary-500) 15%, transparent);">{{ $item['content'] }}</div>
                 @else
                     <div class="fi-prose" style="align-self: flex-start; max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 0.75rem; background: color-mix(in oklab, currentColor 8%, transparent);">
                         {!! \Illuminate\Support\Str::markdown($item['content'], ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}
