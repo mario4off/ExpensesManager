@@ -2,7 +2,7 @@
 
 Las tareas se ejecutan una a una, únicamente cuando el usuario indique cuál realizar. Los tests nuevos se limitan a controles especialmente críticos; en caso de duda se comprueba manualmente. S3, Bedrock y Ollama se mockean en tests.
 
-- [ ] **T01 — Retirar el metadato redundante del objeto S3.** Eliminar la escritura de `Metadata.area` durante las subidas; conservar `documents.area` y las rutas por área. Retirar el test que exige ese metadato y actualizar las reglas y referencias documentales afectadas. No modificar masivamente los objetos existentes. Depende de: —. RF: RF-02.
+- [x] **T01 — Retirar el metadato redundante del objeto S3.** Eliminar la escritura de `Metadata.area` durante las subidas; conservar `documents.area` y las rutas por área. Retirar el test que exige ese metadato y actualizar las reglas y referencias documentales afectadas. No modificar masivamente los objetos existentes. Depende de: —. RF: RF-02.
   **Hecho cuando:** las subidas conservan el área en MySQL y la ruta S3 sin añadir el metadato al objeto; las referencias afectadas describen el comportamiento vigente.
 
 - [ ] **T02 — Actualizar el orden de fases.** Reflejar conversación → RAG → SQL en `AGENTS.md` y `docs/constitution.md`. Depende de: —. RF: —.

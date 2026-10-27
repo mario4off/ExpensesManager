@@ -18,8 +18,8 @@ class DocumentStorage
     private const ROOT = 'docs';
 
     /**
-     * Upload the file to s3 as docs/{area}/{uuid}.{ext}, with the area as object
-     * metadata, and create its document row.
+     * Upload the file to s3 as docs/{area}/{uuid}.{ext} and create its document
+     * row, keeping the area in the database and the path.
      */
     public function store(UploadedFile $file, string $area): Document
     {
@@ -29,7 +29,7 @@ class DocumentStorage
         $stream = fopen($file->getRealPath(), 'r');
 
         try {
-            Storage::disk('s3')->put($path, $stream, ['Metadata' => ['area' => $area]]);
+            Storage::disk('s3')->put($path, $stream);
         } finally {
             fclose($stream);
         }

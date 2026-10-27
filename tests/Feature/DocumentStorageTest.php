@@ -2,7 +2,6 @@
 
 use App\Models\Document;
 use App\Services\DocumentStorage;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,18 +22,6 @@ it('stores a document in s3 under docs/{area}/{uuid}.{ext} and nothing in local 
         ->and(Storage::disk('local')->allFiles())->toBeEmpty();
 
     Storage::disk('s3')->assertExists($document->path);
-});
-
-it('writes the area as metadata of the s3 object', function () {
-    $disk = Mockery::mock(Filesystem::class);
-    $disk->shouldReceive('put')
-        ->once()
-        ->withArgs(fn (string $path, $contents, array $options) => str_starts_with($path, 'docs/insurance_policies/')
-            && $options['Metadata'] === ['area' => 'insurance_policies'])
-        ->andReturnTrue();
-    Storage::set('s3', $disk);
-
-    app(DocumentStorage::class)->store(pdf('poliza.pdf'), 'insurance_policies');
 });
 
 it('does not create a document row when s3 fails on write', function () {
