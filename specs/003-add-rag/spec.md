@@ -38,6 +38,13 @@ Permitir que el usuario consulte en lenguaje natural el contenido de los documen
 - **RF-13.** Cuando el usuario solicite la previsualización, el sistema comprobará autenticación, permisos y asociación vigente, y abrirá el archivo en otra pestaña mediante una URL temporal de S3. La URL caducará a los cinco minutos y no se guardará en el historial.
 - **RF-14.** Cuando el usuario abra el registro, el sistema abrirá la edición de la factura o póliza en su recurso existente de Filament. La aplicación construirá ambos enlaces a partir de registros verificados.
 
+### Creación y configuración de Bedrock
+
+- **RF-15.** La entrega incluirá crear y configurar desde la consola AWS una Knowledge Base y su origen de datos S3, utilizando el bucket existente y su región.
+- **RF-16.** La configuración limitará el origen a los prefijos de documentos de la aplicación y permitirá recuperar contenido de PDF y PNG, incluidos escaneados, así como filtrar mediante `area` y relacionar resultados mediante `document_id`. No se impondrá BDA.
+- **RF-17.** Se configurarán el rol de servicio de Bedrock y los permisos de la aplicación para consultar la Knowledge Base e iniciar y comprobar ingestas, limitados a los recursos utilizados.
+- **RF-18.** Se recogerán la región, el identificador de Knowledge Base y el de origen de datos para configurar Laravel mediante `.env`. La configuración efectiva de procesamiento, embeddings y almacenamiento quedará documentada sin incluir credenciales.
+
 ## Fuera de alcance
 
 - Consultas SQL de negocio y extracción de información hacia campos del CRUD.
@@ -47,7 +54,8 @@ Permitir que el usuario consulte en lenguaje natural el contenido de los documen
 
 ## Criterios de finalización
 
-1. Se cumplen RF-01 a RF-14, con documentación de preparación de AWS, worker, carga inicial y recuperación de fallos.
+1. Se cumplen RF-01 a RF-18, con documentación de preparación de AWS, worker, carga inicial y recuperación de fallos.
 2. Los tests nuevos se limitan a controles especialmente críticos: aislamiento entre áreas, rechazo de fuentes manipuladas o invalidadas y protección de la previsualización. Se escriben primero y se verifican en rojo; en caso de duda se comprueba manualmente.
 3. Los servicios externos se mockean y los tests usan MySQL de pruebas. Respuestas, seguimientos, estados, sincronización y navegación se verifican manualmente.
 4. `./vendor/bin/pest` pasa y `./vendor/bin/pint` se ejecuta. No se añaden secretos, dependencias ni migraciones.
+5. La Knowledge Base está disponible y, después de preparar los `.metadata.json`, se comprueban manualmente la ingesta de PDF y PNG, la recuperación de contenido y el filtrado por área.
