@@ -24,7 +24,7 @@ class DocumentStorage
     public function store(UploadedFile $file, string $area): Document
     {
         $extension = $file->guessExtension() ?? $file->getClientOriginalExtension();
-        $path = self::ROOT.'/'.$area.'/'.Str::uuid().'.'.$extension;
+        $path = self::ROOT . '/' . $area . '/' . Str::uuid() . '.' . $extension;
 
         $stream = fopen($file->getRealPath(), 'r');
 
@@ -62,13 +62,5 @@ class DocumentStorage
         if ($document) {
             $this->delete($document);
         }
-    }
-
-    /**
-     * @return resource|null
-     */
-    public function readStream(Document $document)
-    {
-        return Storage::disk('s3')->readStream($document->path);
     }
 }
